@@ -1,11 +1,13 @@
 ﻿using Newtonsoft.Json;
+using NPushOver.Exceptions;
+using NPushOver.Ratelimiters;
+using NPushOver.RequestObjects;
+using NPushOver.ResponseObjects;
+using NPushOver.Validators;
 using System;
-using System.Collections.Specialized;
 using System.IO;
 using System.Net;
-using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace NPushOver
@@ -20,18 +22,16 @@ namespace NPushOver
 
         private static readonly DateTime EPOCH = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-        private static Regex appkeyregex = new Regex("[A-Za-z0-9]{30}", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.Singleline);
-        private static Regex usergroupregex = new Regex("[A-Za-z0-9]{30}", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.Singleline);
-        private static Regex deviceregex = new Regex("[A-Za-z0-9_-]{1,25}", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.Singleline);
-
         public Encoding Encoding { get; private set; }
         public Uri BaseUri { get; private set; }
         public string ApplicationToken { get; private set; }
         public IRateLimiter RateLimiter { get; private set; }
-        public IWebProxy Proxy { get; set; }
 
-        //public ICredentials Credentials { get; set; }
-        //public RequestCachePolicy RequestCachePolicy { get; set; }
+        public IWebProxy Proxy { get; set; }
+        public IValidator<Message> MessageValidator { get; set; }
+        public IValidator<string> AppKeyValidator { get; set; }
+        public IValidator<string> UserOrGroupKeyValidator { get; set; }
+        public IValidator<string> DeviceNameValidator { get; set; }
 
         public PushOver(string applicationToken)
             : this(applicationToken, DEFAULTURI) { }
@@ -44,16 +44,13 @@ namespace NPushOver
 
         public PushOver(string applicationToken, Uri baseUri, IRateLimiter rateLimiter, Encoding encoding)
         {
-            if (applicationToken == null)
-                throw new ArgumentNullException("applicationToken");
+            (this.AppKeyValidator ?? new ApplicationKeyValidator()).Validate("applicationToken", applicationToken);
             if (baseUri == null)
                 throw new ArgumentNullException("baseUri");
             if (rateLimiter == null)
                 throw new ArgumentNullException("rateLimiter");
             if (encoding == null)
                 throw new ArgumentNullException("encoding");
-            if (!appkeyregex.IsMatch(applicationToken))
-                throw new InvalidKeyException("applicationToken", applicationToken);
 
             this.ApplicationToken = applicationToken;
             this.BaseUri = baseUri;
@@ -73,18 +70,13 @@ namespace NPushOver
 
         public async Task<PushoverResponse> SendMessageAsync(Message message, string userOrGroup, string[] devices)
         {
-            ValidateMessage(message);
-
-            if (userOrGroup == null)
-                throw new ArgumentNullException("user");
-            if (!usergroupregex.IsMatch(userOrGroup))
-                throw new InvalidKeyException("user", userOrGroup);
+            (this.MessageValidator ?? new DefaultMessageValidator()).Validate("message", message);
+            (this.UserOrGroupKeyValidator ?? new UserOrGroupKeyValidator()).Validate("userOrGroup", userOrGroup);
             if (devices != null && devices.Length > 0)
             {
                 foreach (var device in devices)
                 {
-                    if (!deviceregex.IsMatch(device))
-                        throw new InvalidKeyException("device", device);
+                    (this.DeviceNameValidator ?? new DeviceNameValidator()).Validate("device", device);
                 }
             }
 
@@ -123,48 +115,6 @@ namespace NPushOver
             }
         }
 
-        private void ValidateMessage(Message message)
-        {
-            if (message == null)
-                throw new ArgumentNullException("message");
-
-            if (message.Body == null)
-                throw new ArgumentNullException("body");
-            if (message.Body.Length > 1024)                     //TODO: Move to some "consts"
-                throw new ArgumentOutOfRangeException("body");  //TODO: Maybe add explanation?
-
-            if ((message.Title ?? string.Empty).Length > 250)   //TODO: Move to some "consts"?
-                throw new ArgumentOutOfRangeException("title"); //TODO: Maybe add explanation?
-
-            if (!Enum.IsDefined(typeof(Priority), message.Priority))
-                throw new ArgumentOutOfRangeException("priority");
-
-            if (message.Priority == Priority.Emergency)
-            {
-                if (message.RetryOptions == null)
-                    throw new ArgumentNullException("retryOptions");
-
-                if (message.RetryOptions.RetryEvery < TimeSpan.FromSeconds(30))
-                    throw new ArgumentOutOfRangeException("retryOptions.retryEvery");
-                if (message.RetryOptions.RetryPeriod > TimeSpan.FromHours(24))
-                    throw new ArgumentOutOfRangeException("retryOptions.retryPeriod");
-            }
-            else
-            {
-                if (message.RetryOptions != null)
-                    throw new ArgumentException("retryOptions");
-            }
-
-            if (message.SupplementaryUrl != null)
-            {
-                if (message.SupplementaryUrl.Uri == null)
-                    throw new ArgumentNullException("supplementaryUrl.uri");
-
-                if ((message.SupplementaryUrl.Title ?? string.Empty).Length > 100)      //TODO: Move to some "consts"?
-                    throw new ArgumentOutOfRangeException("supplementaryUrl.title");    //TODO: Maybe add explanation?
-            }
-        }
-
         public async Task<SoundsResponse> ListSoundsAsync()
         {
             using (var wc = this.GetWebClient())
@@ -193,18 +143,20 @@ namespace NPushOver
             }
             catch (WebException wex)
             {
-                var response = (HttpWebResponse)wex.Response;
-                switch ((int)response.StatusCode)
+                var response = wex.Response as HttpWebResponse;
+                if (response != null)
                 {
-                    case 400:   //Bad request
-                        var r = new StreamReader(wex.Response.GetResponseStream()).ReadToEnd();
-                        throw;
-                    case 429:
-                        //Rate limited: https://pushover.net/api#limits
-                        throw new NotImplementedException();    //TODO...
-                    default:
-                        throw;
+                    //Try parse any json response... IF any
+                    PushoverResponse errorresponse = ParseErrorResponse(response);
+                    switch ((int)response.StatusCode)
+                    {
+                        case 400:   //Bad request
+                            throw new ResponseException("Bad request", errorresponse, wex);
+                        case 429:   //Rate limited
+                            throw new RateLimitExceededException(errorresponse);    //TODO...
+                    }
                 }
+                throw;
             }
             catch (PushOverException)
             {
@@ -214,6 +166,24 @@ namespace NPushOver
             {
                 throw new PushOverException("Error retrieving response", ex);
             }
+        }
+
+        private PushoverResponse ParseErrorResponse(HttpWebResponse response)
+        {
+            PushoverResponse errorresponse = null;
+            try
+            {
+                using (var s = response.GetResponseStream())
+                using (var r = new StreamReader(s, this.Encoding))
+                {
+                    errorresponse = JsonConvert.DeserializeObject<PushoverResponse>(r.ReadToEnd());
+                }
+            }
+            catch
+            {
+                //NOP
+            }
+            return errorresponse;
         }
 
         private static async Task<T> ParseResponse<T>(string json)
@@ -230,7 +200,7 @@ namespace NPushOver
             }
 
             if (!result.IsOk)
-                throw new PushOverResponseException("API returned one or more errors", result);
+                throw new ResponseException("API returned one or more errors", result);
             return result;
         }
 
@@ -239,8 +209,6 @@ namespace NPushOver
             var wc = new WebClient();
             wc.Proxy = this.Proxy;
             wc.Headers.Add(HttpRequestHeader.UserAgent, string.Format("NPushover {0}", typeof(PushOver).Assembly.GetName().Version));
-            //wc.Credentials = Credentials;
-            //wc.CachePolicy = 
             wc.Encoding = this.Encoding;
             return wc;
         }

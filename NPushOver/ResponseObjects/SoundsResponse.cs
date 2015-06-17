@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NPushOver
+namespace NPushOver.ResponseObjects
 {
     public class SoundsResponse : PushoverResponse
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NPushOver
+namespace NPushOver.Exceptions
 {
     public class PushOverException : Exception
     {

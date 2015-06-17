@@ -1,5 +1,4 @@
-﻿
-namespace NPushOver
+﻿namespace NPushOver.ResponseObjects
 {
     public class PushoverResponse
     {
@@ -7,7 +6,7 @@ namespace NPushOver
         public string Request { get; set; }
         public string Receipt { get; set; }
         public string[] Errors { get; set; }
-
+        public RateLimitInfo RateLimitInfo { get; set; }
         public bool HasErrors
         {
             get { return this.Errors != null && this.Errors.Length > 0; }

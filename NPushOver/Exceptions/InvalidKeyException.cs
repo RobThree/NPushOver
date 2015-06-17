@@ -1,4 +1,4 @@
-﻿namespace NPushOver
+﻿namespace NPushOver.Exceptions
 {
     public class InvalidKeyException : PushOverException
     {

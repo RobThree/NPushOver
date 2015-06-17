@@ -1,5 +1,4 @@
-﻿
-namespace NPushOver
+﻿namespace NPushOver.Ratelimiters
 {
     public class NullRateLimiter : IRateLimiter
     {

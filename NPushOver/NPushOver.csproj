@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\RateLimitExceededException.cs" />
     <Compile Include="RequestObjects\Enums.cs" />
     <Compile Include="Exceptions\InvalidKeyException.cs" />
     <Compile Include="Ratelimiters\IRateLimiter.cs" />
@@ -52,9 +53,13 @@
     <Compile Include="PushOver.cs" />
     <Compile Include="Exceptions\PushOverException.cs" />
     <Compile Include="PushOverParams.cs" />
-    <Compile Include="Exceptions\PushOverResponseException.cs" />
+    <Compile Include="Exceptions\ResponseException.cs" />
     <Compile Include="RequestObjects\RetryOptions.cs" />
     <Compile Include="RequestObjects\SupplementaryURL.cs" />
+    <Compile Include="ResponseObjects\RateLimitInfo.cs" />
+    <Compile Include="Validators\IValidator.cs" />
+    <Compile Include="Validators\DefaultMessageValidator.cs" />
+    <Compile Include="Validators\KeyValidators.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
