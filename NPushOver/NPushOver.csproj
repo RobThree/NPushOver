@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums.cs" />
+    <Compile Include="InvalidKeyException.cs" />
     <Compile Include="IRateLimiter.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="NullRateLimiter.cs" />
@@ -51,6 +52,7 @@
     <Compile Include="PushOver.cs" />
     <Compile Include="PushOverException.cs" />
     <Compile Include="PushOverParams.cs" />
+    <Compile Include="PushOverResponseException.cs" />
     <Compile Include="RetryOptions.cs" />
     <Compile Include="SupplementaryURL.cs" />
   </ItemGroup>

@@ -10,7 +10,7 @@ namespace NPushOver
         public SupplementaryURL SupplementaryUrl { get; set; }
         public DateTime? Timestamp { get; set; }
         public string Sound { get; set; }
-
+        public bool IsHtmlBody { get; set; }
         public RetryOptions RetryOptions { get; set; }
         
         //public Message SetPriority(Priority priority)

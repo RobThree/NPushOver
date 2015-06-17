@@ -15,6 +15,18 @@ namespace NPushOver
                 this.Add(key, value);
         }
 
+        public void AddConditional(string key, string[] value, string separator = ",")
+        {
+            if (value != null && value.Length > 0)
+                this.Add(key, string.Join(separator, value));
+        }
+
+        public void AddConditional(string key, bool value)
+        {
+            if (value)
+                this.Add(key, 1);
+        }
+
         public void Add(string key, Uri value)
         {
             if (value != null)
