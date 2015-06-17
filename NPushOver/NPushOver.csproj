@@ -43,25 +43,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Enums.cs" />
-    <Compile Include="InvalidKeyException.cs" />
-    <Compile Include="IRateLimiter.cs" />
-    <Compile Include="Message.cs" />
-    <Compile Include="NullRateLimiter.cs" />
+    <Compile Include="RequestObjects\Enums.cs" />
+    <Compile Include="Exceptions\InvalidKeyException.cs" />
+    <Compile Include="Ratelimiters\IRateLimiter.cs" />
+    <Compile Include="RequestObjects\Message.cs" />
+    <Compile Include="Ratelimiters\NullRateLimiter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PushOver.cs" />
-    <Compile Include="PushOverException.cs" />
+    <Compile Include="Exceptions\PushOverException.cs" />
     <Compile Include="PushOverParams.cs" />
-    <Compile Include="PushOverResponseException.cs" />
-    <Compile Include="RetryOptions.cs" />
-    <Compile Include="SupplementaryURL.cs" />
+    <Compile Include="Exceptions\PushOverResponseException.cs" />
+    <Compile Include="RequestObjects\RetryOptions.cs" />
+    <Compile Include="RequestObjects\SupplementaryURL.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <Compile Include="PushoverResponse.cs" />
+    <Compile Include="ResponseObjects\PushoverResponse.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SoundsResponse.cs" />
+    <Compile Include="ResponseObjects\SoundsResponse.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
