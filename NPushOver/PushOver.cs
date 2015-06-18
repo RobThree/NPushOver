@@ -307,6 +307,23 @@ namespace NPushOver
             }
         }
 
+        public async Task<ListMessagesResponse> ListMessagesAsync(string secret, string deviceid)
+        {
+            if (string.IsNullOrEmpty(secret))
+                throw new ArgumentNullException("secret");
+            if (string.IsNullOrEmpty(deviceid))
+                throw new ArgumentNullException("deviceid");
+
+            using (var wc = this.GetWebClient())
+            {
+                return await ExecuteWebRequest<ListMessagesResponse>(async () =>
+                {
+                    var json = await wc.DownloadStringTaskAsync(GetUriFromBase("messages.json?secret={0}&device_id={1}", secret, deviceid));
+                    return await ParseResponse<ListMessagesResponse>(json, wc.ResponseHeaders);
+                });
+            }
+        }
+
         private Uri GetUriFromBase(string relative, params object[] args)
         {
             return new Uri(this.BaseUri, string.Format(relative, args));

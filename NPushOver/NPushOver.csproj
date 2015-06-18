@@ -62,11 +62,14 @@
     <Compile Include="RequestObjects\RetryOptions.cs" />
     <Compile Include="RequestObjects\SupplementaryURL.cs" />
     <Compile Include="ResponseObjects\AssignLicenseResponse.cs" />
+    <Compile Include="ResponseObjects\ListMessagesResponse.cs" />
+    <Compile Include="ResponseObjects\ListMessagesUser.cs" />
     <Compile Include="ResponseObjects\LoginResponse.cs" />
     <Compile Include="ResponseObjects\MigrateSubscriptionResponse.cs" />
     <Compile Include="ResponseObjects\RateLimitInfo.cs" />
     <Compile Include="ResponseObjects\ReceiptResponse.cs" />
     <Compile Include="ResponseObjects\RegisterDeviceResponse.cs" />
+    <Compile Include="ResponseObjects\StoredMessage.cs" />
     <Compile Include="ResponseObjects\ValidateUserOrGroupResponse.cs" />
     <Compile Include="Validators\EMailValidator.cs" />
     <Compile Include="Validators\IValidator.cs" />

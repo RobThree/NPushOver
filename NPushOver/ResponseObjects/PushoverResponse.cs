@@ -3,8 +3,9 @@ namespace NPushOver.ResponseObjects
 {
     public class PushoverResponse
     {
-        [JsonProperty("user")]
-        public string User { get; set; }
+        //TODO: This conflicts with ListMessages response (BUG? REPORT? See https://pushover.net/api#response)
+        //[JsonProperty("user")]
+        //public string User { get; set; }
         
         [JsonProperty("status")]
         public int Status { get; set; }
