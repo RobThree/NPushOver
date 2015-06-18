@@ -260,10 +260,10 @@ namespace NPushOver
                 throw new PushOverException("Error parsing response", ex);
             }
 
+            result.RateLimitInfo = ParseRateLimitInfo(headers);
             if (!result.IsOk)
                 throw new ResponseException("API returned one or more errors", result);
             
-            result.RateLimitInfo = ParseRateLimitInfo(headers);
             return result;
         }
 
