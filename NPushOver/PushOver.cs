@@ -15,7 +15,6 @@ namespace NPushOver
     //Based on documentation from https://pushover.net/api
     //TODO: Extend with a rate-limiter
 
-    //TODO: Implement Licensing API: https://pushover.net/api/licensing
     //TODO: ?? Implement OpenClient API: https://pushover.net/api/client
 
     public class PushOver
@@ -36,6 +35,7 @@ namespace NPushOver
         public IValidator<string> UserOrGroupKeyValidator { get; set; }
         public IValidator<string> DeviceNameValidator { get; set; }
         public IValidator<string> ReceiptValidator { get; set; }
+        public IValidator<string> EmailValidator { get; set; }
 
         public PushOver(string applicationToken)
             : this(applicationToken, DEFAULTURI) { }
@@ -223,6 +223,41 @@ namespace NPushOver
             }
         }
 
+        public async Task<AssignLicenseResponse> AssignLicenseAsync(string user, string email)
+        {
+            return await AssignLicenseAsync(user, email, OS.Any);
+        }
+
+        public async Task<AssignLicenseResponse> AssignLicenseAsync(string user, string email, OS os)
+        {
+            if (user != null)
+                (this.UserOrGroupKeyValidator ?? new UserOrGroupKeyValidator()).Validate("user", user);
+            if (email != null)
+                (this.EmailValidator ?? new EMailValidator()).Validate("email", email);
+
+            if (user == null && email == null)
+                throw new InvalidOperationException("User or Email required");
+
+            if (!Enum.IsDefined(typeof(OS), os))
+                throw new ArgumentOutOfRangeException("os");
+
+            using (var wc = this.GetWebClient())
+            {
+                return await ExecuteWebRequest<AssignLicenseResponse>(async () =>
+                {
+                    var parameters = new PushOverParams { 
+                        { "token", this.ApplicationToken }, 
+                    };
+                    parameters.AddConditional("user", user);
+                    parameters.AddConditional("email", email);
+                    parameters.AddConditional("os", os);
+
+                    var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetUriFromBase("licenses/assign.json"), parameters));
+                    return await ParseResponse<AssignLicenseResponse>(json, wc.ResponseHeaders);
+                });
+            }
+        }
+
         private Uri GetUriFromBase(string relative, params object[] args)
         {
             return new Uri(this.BaseUri, string.Format(relative, args));
@@ -288,8 +323,8 @@ namespace NPushOver
         {
             int limit, remaining, reset;
 
-            if (int.TryParse(headers["X-Limit-App-Limit"], out limit) 
-                && int.TryParse(headers["X-Limit-App-Remaining"], out remaining) 
+            if (int.TryParse(headers["X-Limit-App-Limit"], out limit)
+                && int.TryParse(headers["X-Limit-App-Remaining"], out remaining)
                 && int.TryParse(headers["X-Limit-App-Reset"], out reset))
             {
                 return new RateLimitInfo(limit, remaining, EPOCH.AddSeconds(reset));
@@ -313,7 +348,7 @@ namespace NPushOver
             result.RateLimitInfo = ParseRateLimitInfo(headers);
             if (!result.IsOk)
                 throw new ResponseException("API returned one or more errors", result);
-            
+
             return result;
         }
 

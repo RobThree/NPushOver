@@ -59,10 +59,12 @@
     <Compile Include="Exceptions\ResponseException.cs" />
     <Compile Include="RequestObjects\RetryOptions.cs" />
     <Compile Include="RequestObjects\SupplementaryURL.cs" />
+    <Compile Include="ResponseObjects\AssignLicenseResponse.cs" />
     <Compile Include="ResponseObjects\MigrateSubscriptionResponse.cs" />
     <Compile Include="ResponseObjects\RateLimitInfo.cs" />
     <Compile Include="ResponseObjects\ReceiptResponse.cs" />
     <Compile Include="ResponseObjects\ValidateUserOrGroupResponse.cs" />
+    <Compile Include="Validators\EMailValidator.cs" />
     <Compile Include="Validators\IValidator.cs" />
     <Compile Include="Validators\DefaultMessageValidator.cs" />
     <Compile Include="Validators\KeyValidators.cs" />

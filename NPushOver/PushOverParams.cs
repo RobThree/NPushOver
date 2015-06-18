@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NPushOver.RequestObjects;
+using System;
 using System.Collections.Specialized;
 
 namespace NPushOver
@@ -21,6 +22,12 @@ namespace NPushOver
         {
             if (value)
                 this.Add(key, 1);
+        }
+
+        public void AddConditional(string key, OS value)
+        {
+            if (value != OS.Any)
+                this.Add(key, value.ToString().ToLowerInvariant());
         }
 
         public void Add(string key, Uri value)

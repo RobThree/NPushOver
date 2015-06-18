@@ -34,4 +34,12 @@
         Updown,
         None
     }
+
+    public enum OS
+    {
+        Any,
+        Android,
+        iOS,
+        Desktop
+    }
 }
