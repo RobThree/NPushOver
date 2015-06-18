@@ -1,6 +1,7 @@
 ﻿using System;
 using NPushOver;
 using System.Threading.Tasks;
+using NPushOver.RequestObjects;
 
 namespace TestApp
 {

@@ -59,6 +59,7 @@
     <Compile Include="Exceptions\ResponseException.cs" />
     <Compile Include="RequestObjects\RetryOptions.cs" />
     <Compile Include="RequestObjects\SupplementaryURL.cs" />
+    <Compile Include="ResponseObjects\MigrateSubscriptionResponse.cs" />
     <Compile Include="ResponseObjects\RateLimitInfo.cs" />
     <Compile Include="ResponseObjects\ReceiptResponse.cs" />
     <Compile Include="ResponseObjects\ValidateUserOrGroupResponse.cs" />

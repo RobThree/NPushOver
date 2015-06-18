@@ -15,7 +15,6 @@ namespace NPushOver
     //Based on documentation from https://pushover.net/api
     //TODO: Extend with a rate-limiter
 
-    //TODO: Implement Subscription API:https://pushover.net/api/subscriptions
     //TODO: Implement Licensing API: https://pushover.net/api/licensing
     //TODO: ?? Implement OpenClient API: https://pushover.net/api/client
 
@@ -186,6 +185,40 @@ namespace NPushOver
 
                     var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetUriFromBase("users/validate.json"), parameters));
                     return await ParseResponse<ValidateUserOrGroupResponse>(json, wc.ResponseHeaders);
+                });
+            }
+        }
+
+        public async Task<MigrateSubscriptionResponse> MigrateSubscriptionAsync(string subscription, string userOrGroup)
+        {
+            return await MigrateSubscriptionAsync(subscription, userOrGroup, null);
+        }
+
+        public async Task<MigrateSubscriptionResponse> MigrateSubscriptionAsync(string subscription, string userOrGroup, string device)
+        {
+            return await MigrateSubscriptionAsync(subscription, userOrGroup, null, null);
+        }
+
+        public async Task<MigrateSubscriptionResponse> MigrateSubscriptionAsync(string subscription, string userOrGroup, string device, string sound)
+        {
+            (this.UserOrGroupKeyValidator ?? new UserOrGroupKeyValidator()).Validate("userOrGroup", userOrGroup);
+            if (device != null)
+                (this.DeviceNameValidator ?? new DeviceNameValidator()).Validate("device", device);
+
+            using (var wc = this.GetWebClient())
+            {
+                return await ExecuteWebRequest<MigrateSubscriptionResponse>(async () =>
+                {
+                    var parameters = new PushOverParams { 
+                        { "token", this.ApplicationToken }, 
+                        { "subscription", subscription },
+                        { "user", userOrGroup },
+                    };
+                    parameters.AddConditional("device_name", device);
+                    parameters.AddConditional("sound", sound);
+
+                    var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetUriFromBase("subscriptions/migrate.json"), parameters));
+                    return await ParseResponse<MigrateSubscriptionResponse>(json, wc.ResponseHeaders);
                 });
             }
         }
