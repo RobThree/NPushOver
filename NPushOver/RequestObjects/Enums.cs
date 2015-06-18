@@ -42,4 +42,10 @@
         iOS,
         Desktop
     }
+
+    public enum SoundType
+    {
+        Mp3,
+        Wav
+    }
 }

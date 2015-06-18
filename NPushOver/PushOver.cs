@@ -19,7 +19,7 @@ namespace NPushOver
 
     public class PushOver
     {
-        public static readonly Uri DEFAULTURI = new Uri("https://api.pushover.net/1/");
+        public static readonly Uri DEFAULTBASEURI = new Uri("https://api.pushover.net/");
         public static readonly Encoding DEFAULTENCODING = Encoding.UTF8;
 
         private static readonly DateTime EPOCH = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -38,7 +38,7 @@ namespace NPushOver
         public IValidator<string> EmailValidator { get; set; }
 
         public PushOver(string applicationToken)
-            : this(applicationToken, DEFAULTURI) { }
+            : this(applicationToken, DEFAULTBASEURI) { }
 
         public PushOver(string applicationToken, Uri baseUri)
             : this(applicationToken, baseUri, new NullRateLimiter()) { }
@@ -113,7 +113,7 @@ namespace NPushOver
                     if (message.Timestamp != null)
                         parameters.Add("timestamp", (int)(TimeZoneInfo.ConvertTimeToUtc(message.Timestamp.Value).Subtract(EPOCH).TotalSeconds));
 
-                    var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetUriFromBase("messages.json"), parameters));
+                    var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetV1APIUriFromBase("messages.json"), parameters));
                     return await ParseResponse<PushoverResponse>(json, wc.ResponseHeaders);
                 });
             }
@@ -125,7 +125,7 @@ namespace NPushOver
             {
                 return await ExecuteWebRequest<SoundsResponse>(async () =>
                 {
-                    var json = await wc.DownloadStringTaskAsync(GetUriFromBase("sounds.json?token={0}", this.ApplicationToken));
+                    var json = await wc.DownloadStringTaskAsync(GetV1APIUriFromBase("sounds.json?token={0}", this.ApplicationToken));
                     return await ParseResponse<SoundsResponse>(json, wc.ResponseHeaders);
                 });
             }
@@ -138,7 +138,7 @@ namespace NPushOver
             {
                 return await ExecuteWebRequest<ReceiptResponse>(async () =>
                 {
-                    var json = await wc.DownloadStringTaskAsync(GetUriFromBase("receipts/{0}.json?token={1}", receipt, this.ApplicationToken));
+                    var json = await wc.DownloadStringTaskAsync(GetV1APIUriFromBase("receipts/{0}.json?token={1}", receipt, this.ApplicationToken));
                     return await ParseResponse<ReceiptResponse>(json, wc.ResponseHeaders);
                 });
             }
@@ -155,7 +155,7 @@ namespace NPushOver
                         { "token", this.ApplicationToken }
                     };
 
-                    var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetUriFromBase("receipts/{0}/cancel.json", receipt), parameters));
+                    var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetV1APIUriFromBase("receipts/{0}/cancel.json", receipt), parameters));
                     return await ParseResponse<PushoverResponse>(json, wc.ResponseHeaders);
                 });
             }
@@ -183,7 +183,7 @@ namespace NPushOver
                     };
                     parameters.AddConditional("device", device);
 
-                    var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetUriFromBase("users/validate.json"), parameters));
+                    var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetV1APIUriFromBase("users/validate.json"), parameters));
                     return await ParseResponse<ValidateUserOrGroupResponse>(json, wc.ResponseHeaders);
                 });
             }
@@ -217,7 +217,7 @@ namespace NPushOver
                     parameters.AddConditional("device_name", device);
                     parameters.AddConditional("sound", sound);
 
-                    var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetUriFromBase("subscriptions/migrate.json"), parameters));
+                    var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetV1APIUriFromBase("subscriptions/migrate.json"), parameters));
                     return await ParseResponse<MigrateSubscriptionResponse>(json, wc.ResponseHeaders);
                 });
             }
@@ -252,7 +252,7 @@ namespace NPushOver
                     parameters.AddConditional("email", email);
                     parameters.AddConditional("os", os);
 
-                    var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetUriFromBase("licenses/assign.json"), parameters));
+                    var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetV1APIUriFromBase("licenses/assign.json"), parameters));
                     return await ParseResponse<AssignLicenseResponse>(json, wc.ResponseHeaders);
                 });
             }
@@ -273,17 +273,17 @@ namespace NPushOver
                         { "password", password }, 
                     };
 
-                    var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetUriFromBase("users/login.json"), parameters));
+                    var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetV1APIUriFromBase("users/login.json"), parameters));
                     return await ParseResponse<LoginResponse>(json, wc.ResponseHeaders);
                 });
             }
         }
 
-        public async Task<RegisterDeviceResponse> RegisterDeviceAsync(string secret, string devicename)
+        public async Task<RegisterDeviceResponse> RegisterDeviceAsync(string secret, string deviceName)
         {
             if (string.IsNullOrEmpty(secret))
                 throw new ArgumentNullException("secret");
-            (this.DeviceNameValidator ?? new DeviceNameValidator()).Validate("devicename", devicename);
+            (this.DeviceNameValidator ?? new DeviceNameValidator()).Validate("deviceName", deviceName);
 
             using (var wc = this.GetWebClient())
             {
@@ -291,7 +291,7 @@ namespace NPushOver
                 {
                     var parameters = new PushOverParams { 
                         { "secret", secret }, 
-                        { "name", devicename }, 
+                        { "name", deviceName }, 
                         { "os", "O" }, //This is, currently, the only supported value ("Open Client")
                     };
 
@@ -301,27 +301,55 @@ namespace NPushOver
                     //Where "errors" normally is an array, it is now an object... this is not (very) consistent with the rest of the responses
                     //The call, currently, throws a BadRequestException, as it should, however the errorresponse fails to parse because of this inconsistency...
 
-                    var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetUriFromBase("devices.json"), parameters));
+                    var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetV1APIUriFromBase("devices.json"), parameters));
                     return await ParseResponse<RegisterDeviceResponse>(json, wc.ResponseHeaders);
                 });
             }
         }
 
-        public async Task<ListMessagesResponse> ListMessagesAsync(string secret, string deviceid)
+        public async Task<ListMessagesResponse> ListMessagesAsync(string secret, string deviceId)
         {
             if (string.IsNullOrEmpty(secret))
                 throw new ArgumentNullException("secret");
-            if (string.IsNullOrEmpty(deviceid))
-                throw new ArgumentNullException("deviceid");
+            if (string.IsNullOrEmpty(deviceId))
+                throw new ArgumentNullException("deviceId");
 
             using (var wc = this.GetWebClient())
             {
                 return await ExecuteWebRequest<ListMessagesResponse>(async () =>
                 {
-                    var json = await wc.DownloadStringTaskAsync(GetUriFromBase("messages.json?secret={0}&device_id={1}", secret, deviceid));
+                    var json = await wc.DownloadStringTaskAsync(GetV1APIUriFromBase("messages.json?secret={0}&device_id={1}", secret, deviceId));
                     return await ParseResponse<ListMessagesResponse>(json, wc.ResponseHeaders);
                 });
             }
+        }
+
+        public async Task<Stream> DownloadIconAsync(string iconName)
+        {
+            if (string.IsNullOrEmpty(iconName))
+                throw new ArgumentNullException("iconName");
+            return await this.DownloadFileAsync(GetIconUriFromBase("{0}.png", iconName));
+        }
+
+        public async Task<Stream> DownloadSoundAsync(string soundname)
+        {
+            return await DownloadSoundAsync(soundname, SoundType.Mp3);
+        }
+
+        public async Task<Stream> DownloadSoundAsync(string soundName, SoundType soundType)
+        {
+            if (string.IsNullOrEmpty(soundName))
+                throw new ArgumentNullException("soundName");
+            if (!Enum.IsDefined(typeof(SoundType), soundType))
+                throw new ArgumentOutOfRangeException("soundType");
+
+            return await this.DownloadFileAsync(GetSoundsUriFromBase("{0}.{1}", soundName, soundType.ToString().ToLowerInvariant()));
+        }
+
+        private async Task<Stream> DownloadFileAsync(Uri uri)
+        {
+            using (var wc = this.GetWebClient())
+                return await wc.OpenReadTaskAsync(uri);
         }
 
         private Uri GetUriFromBase(string relative, params object[] args)
@@ -329,6 +357,21 @@ namespace NPushOver
             return new Uri(this.BaseUri, string.Format(relative, args));
         }
 
+
+        private Uri GetV1APIUriFromBase(string relative, params object[] args)
+        {
+            return new Uri(GetUriFromBase("1/"), string.Format(relative, args));
+        }
+
+        private Uri GetIconUriFromBase(string relative, params object[] args)
+        {
+            return new Uri(GetUriFromBase("icons/"), string.Format(relative, args));
+        }
+
+        private Uri GetSoundsUriFromBase(string relative, params object[] args)
+        {
+            return new Uri(GetUriFromBase("sounds/"), string.Format(relative, args));
+        }
 
         private async Task<T> ExecuteWebRequest<T>(Func<Task<T>> func)
             where T : PushoverResponse
