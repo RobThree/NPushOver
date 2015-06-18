@@ -145,6 +145,23 @@ namespace NPushOver
             }
         }
 
+        public async Task<PushoverResponse> CancelReceiptAsync(string receipt)
+        {
+            (this.ReceiptValidator ?? new ReceiptValidator()).Validate("receipt", receipt);
+            using (var wc = this.GetWebClient())
+            {
+                return await ExecuteWebRequest<PushoverResponse>(async () =>
+                {
+                    var parameters = new PushOverParams { 
+                        { "token", this.ApplicationToken }
+                    };
+
+                    var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetUriFromBase("receipts/{0}/cancel.json", receipt), parameters));
+                    return await ParseResponse<PushoverResponse>(json, wc.ResponseHeaders);
+                });
+            }
+        }
+
         public async Task<ValidateUserOrGroupResponse> ValidateUserOrGroupAsync(string userOrGroup)
         {
             return await ValidateUserOrGroupAsync(userOrGroup, null);
