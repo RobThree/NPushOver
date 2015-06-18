@@ -5,6 +5,13 @@ namespace NPushOver.Validators
 {
     public class DefaultMessageValidator : IValidator<Message>
     {
+        private const int MAXBODYLENGTH = 1024;
+        private const int MAXTITLELENGTH = 250;
+        private const int MAXSUPURLTITLELENGTH = 100;
+        private static readonly TimeSpan MINRETRYEVERY = TimeSpan.FromSeconds(30);
+        private static readonly TimeSpan MAXRETRYPERIOD = TimeSpan.FromHours(24);
+
+
         public void Validate(string paramName, Message message)
         {
             if (message == null)
@@ -12,11 +19,11 @@ namespace NPushOver.Validators
 
             if (message.Body == null)
                 throw new ArgumentNullException("body");
-            if (message.Body.Length > 1024)                     //TODO: Move to some "consts"
-                throw new ArgumentOutOfRangeException("body");  //TODO: Maybe add explanation?
+            if (message.Body.Length > MAXBODYLENGTH)
+                throw new ArgumentOutOfRangeException("body");
 
-            if ((message.Title ?? string.Empty).Length > 250)   //TODO: Move to some "consts"?
-                throw new ArgumentOutOfRangeException("title"); //TODO: Maybe add explanation?
+            if ((message.Title ?? string.Empty).Length > MAXTITLELENGTH)
+                throw new ArgumentOutOfRangeException("title");
 
             if (!Enum.IsDefined(typeof(Priority), message.Priority))
                 throw new ArgumentOutOfRangeException("priority");
@@ -26,9 +33,9 @@ namespace NPushOver.Validators
                 if (message.RetryOptions == null)
                     throw new ArgumentNullException("retryOptions");
 
-                if (message.RetryOptions.RetryEvery < TimeSpan.FromSeconds(30))
+                if (message.RetryOptions.RetryEvery < MINRETRYEVERY)
                     throw new ArgumentOutOfRangeException("retryOptions.retryEvery");
-                if (message.RetryOptions.RetryPeriod > TimeSpan.FromHours(24))
+                if (message.RetryOptions.RetryPeriod > MAXRETRYPERIOD)
                     throw new ArgumentOutOfRangeException("retryOptions.retryPeriod");
             }
             else
@@ -42,8 +49,8 @@ namespace NPushOver.Validators
                 if (message.SupplementaryUrl.Uri == null)
                     throw new ArgumentNullException("supplementaryUrl.uri");
 
-                if ((message.SupplementaryUrl.Title ?? string.Empty).Length > 100)      //TODO: Move to some "consts"?
-                    throw new ArgumentOutOfRangeException("supplementaryUrl.title");    //TODO: Maybe add explanation?
+                if ((message.SupplementaryUrl.Title ?? string.Empty).Length > MAXSUPURLTITLELENGTH)
+                    throw new ArgumentOutOfRangeException("supplementaryUrl.title");
             }
         }
     }

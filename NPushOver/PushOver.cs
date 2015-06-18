@@ -7,6 +7,7 @@ using NPushOver.Validators;
 using System;
 using System.IO;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,10 +16,13 @@ namespace NPushOver
     //Based on documentation from https://pushover.net/api
     //TODO: Extend with a rate-limiter
 
-    //TODO: ?? Implement OpenClient API: https://pushover.net/api/client
+    //TODO: Implement OpenClient API realtime notifications? https://pushover.net/api/client
 
     public class PushOver
     {
+        private static readonly string HOMEURL = "https://github.com/RobThree/NPushOver";
+        private static readonly AssemblyName ASSEMBLYNAME = typeof(PushOver).Assembly.GetName();
+
         public static readonly Uri DEFAULTBASEURI = new Uri("https://api.pushover.net/");
         public static readonly Encoding DEFAULTENCODING = Encoding.UTF8;
 
@@ -510,7 +514,7 @@ namespace NPushOver
         {
             var wc = new WebClient();
             wc.Proxy = this.Proxy;
-            wc.Headers.Add(HttpRequestHeader.UserAgent, string.Format("NPushover {0}", typeof(PushOver).Assembly.GetName().Version));
+            wc.Headers.Add(HttpRequestHeader.UserAgent, string.Format("{0} v{1} ({2})", ASSEMBLYNAME.Name, ASSEMBLYNAME.Version.ToString(2), HOMEURL));
             wc.Encoding = this.Encoding;
             return wc;
         }
