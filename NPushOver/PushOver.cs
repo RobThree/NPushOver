@@ -147,13 +147,13 @@ namespace NPushOver
                 if (response != null)
                 {
                     //Try parse any json response... IF any
-                    PushoverResponse errorresponse = ParseErrorResponse(response);
+                    var errorresponse = ParseErrorResponse(response);
                     switch ((int)response.StatusCode)
                     {
                         case 400:   //Bad request
                             throw new ResponseException("Bad request", errorresponse, wex);
                         case 429:   //Rate limited
-                            throw new RateLimitExceededException(errorresponse);    //TODO...
+                            throw new RateLimitExceededException(errorresponse);
                     }
                 }
                 throw;
