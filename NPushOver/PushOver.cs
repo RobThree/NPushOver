@@ -112,7 +112,7 @@ namespace NPushOver
                         parameters.Add("callback", message.RetryOptions.CallBackUrl);
                     }
                     if (message.Timestamp != null)
-                        parameters.Add("timestamp", ((int)(message.Timestamp.Value.ToUniversalTime() - EPOCH).TotalSeconds).ToString());
+                        parameters.Add("timestamp", (int)(TimeZoneInfo.ConvertTimeToUtc(message.Timestamp.Value).Subtract(EPOCH).TotalSeconds));
 
                     var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetUriFromBase("messages.json"), parameters));
                     return await ParseResponse<PushoverResponse>(json, wc.ResponseHeaders);

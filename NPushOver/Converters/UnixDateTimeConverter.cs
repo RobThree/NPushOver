@@ -8,13 +8,12 @@ namespace NPushOver.Converters
     /// Handles explicitly the conversion of UNIX (Epoch) time to DateTime and vice versa.
     /// </summary>
     /// <remarks>
-    /// KeenConnect.CDAPI dates are specified in seconds from UNIX epoch in timezone Europe/Amsterdam. This converter helps to
-    /// convert these values to DateTime objects with the Kind property explicitly set to Utc.
+    /// Dates are specified in seconds from UNIX epoch. This converter helps to convert these values to DateTime
+    /// objects with the Kind property explicitly set to Utc.
     /// </remarks>
     internal class UnixDateTimeConverter : DateTimeConverterBase
     {
         private static DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        private static TimeZoneInfo keentimezone = TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time");
 
         /// <summary>
         /// Writes the JSON representation of the object.
@@ -28,7 +27,7 @@ namespace NPushOver.Converters
             if (date.Kind == DateTimeKind.Utc)
                 writer.WriteValue((long)date.Subtract(epoch).TotalSeconds);
             else
-                writer.WriteValue((long)TimeZoneInfo.ConvertTimeToUtc(date, keentimezone).Subtract(epoch).TotalSeconds);
+                writer.WriteValue((long)TimeZoneInfo.ConvertTimeToUtc(date).Subtract(epoch).TotalSeconds);
         }
 
         /// <summary>
@@ -62,8 +61,8 @@ namespace NPushOver.Converters
     /// Handles explicitly the conversion of UNIX (Epoch) time to nullable DateTime and vice versa.
     /// </summary>
     /// <remarks>
-    /// KeenConnect.CDAPI dates are specified in seconds from UNIX epoch in timezone Europe/Amsterdam. This converter helps to
-    /// convert these values to DateTime objects with the Kind property explicitly set to Utc.
+    /// Dates are specified in seconds from UNIX epoch. This converter helps to convert these values to DateTime 
+    /// objects with the Kind property explicitly set to Utc.
     /// </remarks>
     internal class NullableUnixDateTimeConverter : UnixDateTimeConverter
     {

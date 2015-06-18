@@ -8,6 +8,8 @@ namespace NPushOver.RequestObjects
         public string Title { get; set; }
         public string Body { get; set; }
         public SupplementaryURL SupplementaryUrl { get; set; }
+
+        //Make sure Timestamp is specified in UTC; if not it will be assumed local and converted to UTC.
         public DateTime? Timestamp { get; set; }
         public string Sound { get; set; }
         public bool IsHtmlBody { get; set; }
