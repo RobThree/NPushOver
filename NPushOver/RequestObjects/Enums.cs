@@ -9,7 +9,7 @@
         Emergency = 2
     }
 
-    public enum Sound
+    public enum Sounds
     {
         Pushover,
         Bike,

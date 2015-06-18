@@ -14,7 +14,34 @@ namespace NPushOver.RequestObjects
         public string Sound { get; set; }
         public bool IsHtmlBody { get; set; }
         public RetryOptions RetryOptions { get; set; }
-        
+
+        public static Message Create(Priority priority, string body)
+        {
+            return Create(priority, body, Sounds.Pushover);
+        }
+
+        public static Message Create(Priority priority, string body, Sounds sound)
+        {
+            return Create(priority, body, false, sound);
+        }
+
+        public static Message Create(Priority priority, string body, bool isHtmlBody, Sounds sound)
+        {
+            return Create(priority, null, body, isHtmlBody, sound);
+        }
+
+        public static Message Create(Priority priority, string title, string body, bool isHtmlBody, Sounds sound)
+        {
+            return new Message
+            {
+                Priority = priority,
+                Title = title,
+                Body = body,
+                IsHtmlBody = isHtmlBody,
+                Sound = sound.ToString().ToLowerInvariant()
+            };
+        }
+
         //public Message SetPriority(Priority priority)
         //{
         //    this.Priority = priority;
