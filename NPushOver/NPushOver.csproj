@@ -43,6 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\UnixDateTimeConverter.cs" />
+    <Compile Include="Converters\BoolConverter.cs" />
+    <Compile Include="Exceptions\BadRequestException.cs" />
     <Compile Include="Exceptions\RateLimitExceededException.cs" />
     <Compile Include="RequestObjects\Enums.cs" />
     <Compile Include="Exceptions\InvalidKeyException.cs" />
@@ -57,6 +60,8 @@
     <Compile Include="RequestObjects\RetryOptions.cs" />
     <Compile Include="RequestObjects\SupplementaryURL.cs" />
     <Compile Include="ResponseObjects\RateLimitInfo.cs" />
+    <Compile Include="ResponseObjects\ReceiptResponse.cs" />
+    <Compile Include="ResponseObjects\ValidateUserOrGroupResponse.cs" />
     <Compile Include="Validators\IValidator.cs" />
     <Compile Include="Validators\DefaultMessageValidator.cs" />
     <Compile Include="Validators\KeyValidators.cs" />

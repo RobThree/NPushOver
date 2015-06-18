@@ -15,6 +15,10 @@ namespace NPushOver
     //Based on documentation from https://pushover.net/api
     //TODO: Extend with a rate-limiter
 
+    //TODO: Implement Subscription API:https://pushover.net/api/subscriptions
+    //TODO: Implement Licensing API: https://pushover.net/api/licensing
+    //TODO: ?? Implement OpenClient API: https://pushover.net/api/client
+
     public class PushOver
     {
         public static readonly Uri DEFAULTURI = new Uri("https://api.pushover.net/1/");
@@ -32,6 +36,7 @@ namespace NPushOver
         public IValidator<string> AppKeyValidator { get; set; }
         public IValidator<string> UserOrGroupKeyValidator { get; set; }
         public IValidator<string> DeviceNameValidator { get; set; }
+        public IValidator<string> ReceiptValidator { get; set; }
 
         public PushOver(string applicationToken)
             : this(applicationToken, DEFAULTURI) { }
@@ -127,6 +132,47 @@ namespace NPushOver
             }
         }
 
+        public async Task<ReceiptResponse> GetReceiptAsync(string receipt)
+        {
+            (this.ReceiptValidator ?? new ReceiptValidator()).Validate("receipt", receipt);
+            using (var wc = this.GetWebClient())
+            {
+                return await ExecuteWebRequest<ReceiptResponse>(async () =>
+                {
+                    var json = await wc.DownloadStringTaskAsync(GetUriFromBase("receipts/{0}.json?token={1}", receipt, this.ApplicationToken));
+                    return await ParseResponse<ReceiptResponse>(json, wc.ResponseHeaders);
+                });
+            }
+        }
+
+        public async Task<ValidateUserOrGroupResponse> ValidateUserOrGroupAsync(string userOrGroup)
+        {
+            return await ValidateUserOrGroupAsync(userOrGroup, null);
+        }
+
+        //NOTE: THROWS!! When user is unknown/invalid AND/OR device is unknown/invalid, otherwise returns
+        public async Task<ValidateUserOrGroupResponse> ValidateUserOrGroupAsync(string userOrGroup, string device)
+        {
+            (this.UserOrGroupKeyValidator ?? new UserOrGroupKeyValidator()).Validate("userOrGroup", userOrGroup);
+            if (device != null)
+                (this.DeviceNameValidator ?? new DeviceNameValidator()).Validate("device", device);
+
+            using (var wc = this.GetWebClient())
+            {
+                return await ExecuteWebRequest<ValidateUserOrGroupResponse>(async () =>
+                {
+                    var parameters = new PushOverParams { 
+                        { "token", this.ApplicationToken }, 
+                        { "user", userOrGroup }
+                    };
+                    parameters.AddConditional("device", device);
+
+                    var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetUriFromBase("users/validate.json"), parameters));
+                    return await ParseResponse<ValidateUserOrGroupResponse>(json, wc.ResponseHeaders);
+                });
+            }
+        }
+
         private Uri GetUriFromBase(string relative, params object[] args)
         {
             return new Uri(this.BaseUri, string.Format(relative, args));
@@ -151,7 +197,7 @@ namespace NPushOver
                     switch ((int)response.StatusCode)
                     {
                         case 400:   //Bad request
-                            throw new ResponseException("Bad request", errorresponse, wex);
+                            throw new BadRequestException(errorresponse, wex);
                         case 429:   //Rate limited
                             throw new RateLimitExceededException(errorresponse);
                     }
