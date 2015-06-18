@@ -258,6 +258,55 @@ namespace NPushOver
             }
         }
 
+        public async Task<LoginResponse> LoginAsync(string email, string password)
+        {
+            (this.EmailValidator ?? new EMailValidator()).Validate("email", email);
+            if (string.IsNullOrEmpty(password))
+                throw new ArgumentNullException("password");
+
+            using (var wc = this.GetWebClient())
+            {
+                return await ExecuteWebRequest<LoginResponse>(async () =>
+                {
+                    var parameters = new PushOverParams { 
+                        { "email", email }, 
+                        { "password", password }, 
+                    };
+
+                    var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetUriFromBase("users/login.json"), parameters));
+                    return await ParseResponse<LoginResponse>(json, wc.ResponseHeaders);
+                });
+            }
+        }
+
+        public async Task<RegisterDeviceResponse> RegisterDeviceAsync(string secret, string devicename)
+        {
+            if (string.IsNullOrEmpty(secret))
+                throw new ArgumentNullException("secret");
+            (this.DeviceNameValidator ?? new DeviceNameValidator()).Validate("devicename", devicename);
+
+            using (var wc = this.GetWebClient())
+            {
+                return await ExecuteWebRequest<RegisterDeviceResponse>(async () =>
+                {
+                    var parameters = new PushOverParams { 
+                        { "secret", secret }, 
+                        { "name", devicename }, 
+                        { "os", "O" }, //This is, currently, the only supported value ("Open Client")
+                    };
+
+                    //TODO: BUG? Report? See https://pushover.net/api/client#register
+                    //When an existing devicename is used, a 400 bad request is returned
+                    //However, the JSON returned is {"errors":{"name":["has already been taken"]},"status":0,"request":"b3e85163d0bd8fc84565839ffc33bb42"}
+                    //Where "errors" normally is an array, it is now an object... this is not (very) consistent with the rest of the responses
+                    //The call, currently, throws a BadRequestException, as it should, however the errorresponse fails to parse because of this inconsistency...
+
+                    var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetUriFromBase("devices.json"), parameters));
+                    return await ParseResponse<RegisterDeviceResponse>(json, wc.ResponseHeaders);
+                });
+            }
+        }
+
         private Uri GetUriFromBase(string relative, params object[] args)
         {
             return new Uri(this.BaseUri, string.Format(relative, args));
@@ -307,7 +356,8 @@ namespace NPushOver
                 using (var s = response.GetResponseStream())
                 using (var r = new StreamReader(s, this.Encoding))
                 {
-                    errorresponse = JsonConvert.DeserializeObject<PushoverResponse>(r.ReadToEnd());
+                    var json = r.ReadToEnd();
+                    errorresponse = JsonConvert.DeserializeObject<PushoverResponse>(json);
                 }
 
                 errorresponse.RateLimitInfo = ParseRateLimitInfo(response.Headers);
