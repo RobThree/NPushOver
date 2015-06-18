@@ -110,7 +110,7 @@ namespace NPushOver
                         parameters.Add("timestamp", ((int)(message.Timestamp.Value.ToUniversalTime() - EPOCH).TotalSeconds).ToString());
 
                     var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetUriFromBase("messages.json"), parameters));
-                    return await ParseResponse<PushoverResponse>(json);
+                    return await ParseResponse<PushoverResponse>(json, wc.ResponseHeaders);
                 });
             }
         }
@@ -122,7 +122,7 @@ namespace NPushOver
                 return await ExecuteWebRequest<SoundsResponse>(async () =>
                 {
                     var json = await wc.DownloadStringTaskAsync(GetUriFromBase("sounds.json?token={0}", this.ApplicationToken));
-                    return await ParseResponse<SoundsResponse>(json);
+                    return await ParseResponse<SoundsResponse>(json, wc.ResponseHeaders);
                 });
             }
         }
@@ -178,6 +178,8 @@ namespace NPushOver
                 {
                     errorresponse = JsonConvert.DeserializeObject<PushoverResponse>(r.ReadToEnd());
                 }
+
+                errorresponse.RateLimitInfo = ParseRateLimitInfo(response.Headers);
             }
             catch
             {
@@ -186,7 +188,20 @@ namespace NPushOver
             return errorresponse;
         }
 
-        private static async Task<T> ParseResponse<T>(string json)
+        private static RateLimitInfo ParseRateLimitInfo(WebHeaderCollection headers)
+        {
+            int limit, remaining, reset;
+
+            if (int.TryParse(headers["X-Limit-App-Limit"], out limit) 
+                && int.TryParse(headers["X-Limit-App-Remaining"], out remaining) 
+                && int.TryParse(headers["X-Limit-App-Reset"], out reset))
+            {
+                return new RateLimitInfo(limit, remaining, EPOCH.AddSeconds(reset));
+            }
+            return null;
+        }
+
+        private static async Task<T> ParseResponse<T>(string json, WebHeaderCollection headers)
             where T : PushoverResponse
         {
             T result;
@@ -201,6 +216,8 @@ namespace NPushOver
 
             if (!result.IsOk)
                 throw new ResponseException("API returned one or more errors", result);
+            
+            result.RateLimitInfo = ParseRateLimitInfo(headers);
             return result;
         }
 
