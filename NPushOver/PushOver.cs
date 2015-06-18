@@ -324,6 +324,50 @@ namespace NPushOver
             }
         }
 
+        public async Task<PushoverResponse> DeleteMessagesAsync(string secret, string deviceId, int upToAndIncludingMessageId)
+        {
+            if (string.IsNullOrEmpty(secret))
+                throw new ArgumentNullException("secret");
+            if (string.IsNullOrEmpty(deviceId))
+                throw new ArgumentNullException("deviceId");
+            if (upToAndIncludingMessageId < 0)
+                throw new ArgumentOutOfRangeException("upToAndIncludingMessageId");
+
+            using (var wc = this.GetWebClient())
+            {
+                return await ExecuteWebRequest<PushoverResponse>(async () =>
+                {
+                    var parameters = new PushOverParams { 
+                        { "secret", secret }, 
+                        { "message", upToAndIncludingMessageId },
+                    };
+
+                    var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetV1APIUriFromBase("devices/{0}/update_highest_message.json", deviceId), parameters));
+                    return await ParseResponse<PushoverResponse>(json, wc.ResponseHeaders);
+                });
+            }
+        }
+
+        public async Task<PushoverResponse> AcknowledgeMessageAsync(string secret, string receipt)
+        {
+            if (string.IsNullOrEmpty(secret))
+                throw new ArgumentNullException("secret");
+            (this.ReceiptValidator ?? new ReceiptValidator()).Validate("receipt", receipt);
+
+            using (var wc = this.GetWebClient())
+            {
+                return await ExecuteWebRequest<PushoverResponse>(async () =>
+                {
+                    var parameters = new PushOverParams { 
+                        { "secret", secret }
+                    };
+
+                    var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetV1APIUriFromBase("receipts/{0}/acknowledge.json", receipt), parameters));
+                    return await ParseResponse<PushoverResponse>(json, wc.ResponseHeaders);
+                });
+            }
+        }
+
         public async Task<Stream> DownloadIconAsync(string iconName)
         {
             if (string.IsNullOrEmpty(iconName))
