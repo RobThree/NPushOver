@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Converters;
 using System;
 
-namespace NPushOver.Converters
+namespace NPushover.Converters
 {
     /// <summary>
     /// Handles explicitly the conversion of UNIX (Epoch) time to DateTime and vice versa.

@@ -1,4 +1,4 @@
-﻿namespace NPushOver.RequestObjects
+﻿namespace NPushover.RequestObjects
 {
     public enum Priority
     {

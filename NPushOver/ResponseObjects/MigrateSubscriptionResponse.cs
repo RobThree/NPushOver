@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace NPushOver.ResponseObjects
+namespace NPushover.ResponseObjects
 {
-    public class MigrateSubscriptionResponse : PushoverResponse
+    public class MigrateSubscriptionResponse : PushoverUserResponse
     {
         [JsonProperty("subscribed_user_key")]
         public string SubscribedUserKey { get; set; }

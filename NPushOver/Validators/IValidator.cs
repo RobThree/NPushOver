@@ -1,4 +1,4 @@
-﻿namespace NPushOver.Validators
+﻿namespace NPushover.Validators
 {
     public interface IValidator<T>
     {

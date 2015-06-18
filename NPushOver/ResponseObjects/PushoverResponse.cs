@@ -1,15 +1,11 @@
 ﻿using Newtonsoft.Json;
-namespace NPushOver.ResponseObjects
+namespace NPushover.ResponseObjects
 {
     public class PushoverResponse
     {
-        //TODO: This conflicts with ListMessages response (BUG? REPORT? See https://pushover.net/api#response)
-        //[JsonProperty("user")]
-        //public string User { get; set; }
-        
         [JsonProperty("status")]
         public int Status { get; set; }
-        
+
         [JsonProperty("request")]
         public string Request { get; set; }
 
@@ -36,5 +32,11 @@ namespace NPushOver.ResponseObjects
         {
             get { return this.IsOkStatus && !this.HasErrors; }
         }
+    }
+
+    public class PushoverUserResponse : PushoverResponse
+    {
+        [JsonProperty("user")]
+        public string User { get; set; }
     }
 }

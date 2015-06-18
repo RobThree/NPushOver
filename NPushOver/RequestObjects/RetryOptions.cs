@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NPushOver.RequestObjects
+namespace NPushover.RequestObjects
 {
     public class RetryOptions
     {

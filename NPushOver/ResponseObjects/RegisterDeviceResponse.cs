@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace NPushOver.ResponseObjects
+namespace NPushover.ResponseObjects
 {
-    public class RegisterDeviceResponse : PushoverResponse
+    public class RegisterDeviceResponse : PushoverUserResponse
     {
         [JsonProperty("id")]
         public string Id { get; set; }

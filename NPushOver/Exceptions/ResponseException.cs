@@ -1,9 +1,9 @@
-﻿using NPushOver.ResponseObjects;
+﻿using NPushover.ResponseObjects;
 using System;
 
-namespace NPushOver.Exceptions
+namespace NPushover.Exceptions
 {
-    public class ResponseException : PushOverException
+    public class ResponseException : PushoverException
     {
         public PushoverResponse Response { get; private set; }
 

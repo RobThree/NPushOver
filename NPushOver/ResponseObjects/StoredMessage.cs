@@ -1,10 +1,10 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using NPushOver.Converters;
-using NPushOver.RequestObjects;
+using NPushover.Converters;
+using NPushover.RequestObjects;
 using System;
 
-namespace NPushOver.ResponseObjects
+namespace NPushover.ResponseObjects
 {
     public class StoredMessage
     {

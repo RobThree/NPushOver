@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 
-namespace NPushOver.Converters
+namespace NPushover.Converters
 {
     /// <summary>
     /// Handles explicitly the conversion of integers to booleans and vice versa.

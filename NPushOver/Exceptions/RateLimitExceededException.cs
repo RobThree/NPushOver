@@ -1,7 +1,7 @@
-﻿using NPushOver.ResponseObjects;
+﻿using NPushover.ResponseObjects;
 using System;
 
-namespace NPushOver.Exceptions
+namespace NPushover.Exceptions
 {
     public class RateLimitExceededException : ResponseException
     {

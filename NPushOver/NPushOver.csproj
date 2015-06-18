@@ -7,7 +7,7 @@
     <ProjectGuid>{ED45AAA0-87AA-48D3-BCE9-6EACE9E3F19E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NPushOver</RootNamespace>
+    <RootNamespace>NPushover</RootNamespace>
     <AssemblyName>NPushOver</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -55,9 +55,9 @@
     <Compile Include="RequestObjects\Message.cs" />
     <Compile Include="Ratelimiters\NullRateLimiter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PushOver.cs" />
-    <Compile Include="Exceptions\PushOverException.cs" />
-    <Compile Include="PushOverParams.cs" />
+    <Compile Include="Pushover.cs" />
+    <Compile Include="Exceptions\PushoverException.cs" />
+    <Compile Include="PushoverParams.cs" />
     <Compile Include="Exceptions\ResponseException.cs" />
     <Compile Include="RequestObjects\RetryOptions.cs" />
     <Compile Include="RequestObjects\SupplementaryURL.cs" />

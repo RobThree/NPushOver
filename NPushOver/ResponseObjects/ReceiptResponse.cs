@@ -1,10 +1,10 @@
 ﻿using Newtonsoft.Json;
-using NPushOver.Converters;
+using NPushover.Converters;
 using System;
 
-namespace NPushOver.ResponseObjects
+namespace NPushover.ResponseObjects
 {
-    public class ReceiptResponse : PushoverResponse
+    public class ReceiptResponse : PushoverUserResponse
     {
         [JsonProperty("acknowledged")]
         [JsonConverter(typeof(BoolConverter))]

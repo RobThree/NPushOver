@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace NPushOver.ResponseObjects
+namespace NPushover.ResponseObjects
 {
-    public class LoginResponse : PushoverResponse
+    public class LoginResponse : PushoverUserResponse
     {
         [JsonProperty("id")]
         public string Id { get; set; }

@@ -1,4 +1,4 @@
-﻿namespace NPushOver.Ratelimiters
+﻿namespace NPushover.Ratelimiters
 {
     public interface IRateLimiter
     {

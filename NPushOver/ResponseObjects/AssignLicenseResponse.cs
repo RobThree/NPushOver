@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace NPushOver.ResponseObjects
+namespace NPushover.ResponseObjects
 {
-    public class AssignLicenseResponse : PushoverResponse
+    public class AssignLicenseResponse : PushoverUserResponse
     {
         [JsonProperty("credits")]
         public int Credits { get; set; }

@@ -1,13 +1,13 @@
 ﻿using System;
 
-namespace NPushOver.Exceptions
+namespace NPushover.Exceptions
 {
-    public class PushOverException : Exception
+    public class PushoverException : Exception
     {
-        public PushOverException(string message)
+        public PushoverException(string message)
             : this(message, null) { }
 
-        public PushOverException(string message, Exception innerException)
+        public PushoverException(string message, Exception innerException)
             : base(message, innerException) { }
     }
 }

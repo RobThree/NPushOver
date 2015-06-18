@@ -1,7 +1,7 @@
-﻿using NPushOver.RequestObjects;
+﻿using NPushover.RequestObjects;
 using System;
 
-namespace NPushOver.Validators
+namespace NPushover.Validators
 {
     public class DefaultMessageValidator : IValidator<Message>
     {

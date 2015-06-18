@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NPushOver")]
+[assembly: AssemblyTitle("NPushover")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Devcorner.nl")]
-[assembly: AssemblyProduct("NPushOver")]
+[assembly: AssemblyProduct("NPushover")]
 [assembly: AssemblyCopyright("Copyright © 2015 Rob Janssen")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

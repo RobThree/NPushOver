@@ -1,8 +1,8 @@
-﻿using NPushOver.Exceptions;
+﻿using NPushover.Exceptions;
 using System;
 using System.Text.RegularExpressions;
 
-namespace NPushOver.Validators
+namespace NPushover.Validators
 {
     public abstract class RegexValidator : IValidator<string>
     {

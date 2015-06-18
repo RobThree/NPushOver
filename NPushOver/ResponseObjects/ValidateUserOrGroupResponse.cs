@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace NPushOver.ResponseObjects
+namespace NPushover.ResponseObjects
 {
-    public class ValidateUserOrGroupResponse : PushoverResponse
+    public class ValidateUserOrGroupResponse : PushoverUserResponse
     {
         [JsonProperty("devices")]
         public string[] Devices { get; set; }

@@ -1,10 +1,10 @@
-﻿using NPushOver.RequestObjects;
+﻿using NPushover.RequestObjects;
 using System;
 using System.Collections.Specialized;
 
-namespace NPushOver
+namespace NPushover
 {
-    internal class PushOverParams : NameValueCollection
+    internal class PushoverParams : NameValueCollection
     {
         public void AddConditional(string key, string value)
         {

@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
-using NPushOver.Exceptions;
-using NPushOver.Ratelimiters;
-using NPushOver.RequestObjects;
-using NPushOver.ResponseObjects;
-using NPushOver.Validators;
+using NPushover.Exceptions;
+using NPushover.Ratelimiters;
+using NPushover.RequestObjects;
+using NPushover.ResponseObjects;
+using NPushover.Validators;
 using System;
 using System.IO;
 using System.Net;
@@ -11,17 +11,17 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NPushOver
+namespace NPushover
 {
     //Based on documentation from https://pushover.net/api
     //TODO: Extend with a rate-limiter
 
     //TODO: Implement OpenClient API realtime notifications? https://pushover.net/api/client
 
-    public class PushOver
+    public class Pushover
     {
         private static readonly string HOMEURL = "https://github.com/RobThree/NPushOver";
-        private static readonly AssemblyName ASSEMBLYNAME = typeof(PushOver).Assembly.GetName();
+        private static readonly AssemblyName ASSEMBLYNAME = typeof(Pushover).Assembly.GetName();
 
         public static readonly Uri DEFAULTBASEURI = new Uri("https://api.pushover.net/");
         public static readonly Encoding DEFAULTENCODING = Encoding.UTF8;
@@ -41,16 +41,16 @@ namespace NPushOver
         public IValidator<string> ReceiptValidator { get; set; }
         public IValidator<string> EmailValidator { get; set; }
 
-        public PushOver(string applicationToken)
+        public Pushover(string applicationToken)
             : this(applicationToken, DEFAULTBASEURI) { }
 
-        public PushOver(string applicationToken, Uri baseUri)
+        public Pushover(string applicationToken, Uri baseUri)
             : this(applicationToken, baseUri, new NullRateLimiter()) { }
 
-        public PushOver(string applicationToken, Uri baseUri, IRateLimiter rateLimiter)
+        public Pushover(string applicationToken, Uri baseUri, IRateLimiter rateLimiter)
             : this(applicationToken, baseUri, rateLimiter, DEFAULTENCODING) { }
 
-        public PushOver(string applicationToken, Uri baseUri, IRateLimiter rateLimiter, Encoding encoding)
+        public Pushover(string applicationToken, Uri baseUri, IRateLimiter rateLimiter, Encoding encoding)
         {
             (this.AppKeyValidator ?? new ApplicationKeyValidator()).Validate("applicationToken", applicationToken);
             if (baseUri == null)
@@ -66,17 +66,17 @@ namespace NPushOver
             this.Encoding = encoding;
         }
 
-        public async Task<PushoverResponse> SendMessageAsync(Message message, string userOrGroup)
+        public async Task<PushoverUserResponse> SendMessageAsync(Message message, string userOrGroup)
         {
             return await this.SendMessageAsync(message, userOrGroup, (string[])null);
         }
 
-        public async Task<PushoverResponse> SendMessageAsync(Message message, string userOrGroup, string device)
+        public async Task<PushoverUserResponse> SendMessageAsync(Message message, string userOrGroup, string device)
         {
             return await this.SendMessageAsync(message, userOrGroup, new[] { device });
         }
 
-        public async Task<PushoverResponse> SendMessageAsync(Message message, string userOrGroup, string[] devices)
+        public async Task<PushoverUserResponse> SendMessageAsync(Message message, string userOrGroup, string[] devices)
         {
             (this.MessageValidator ?? new DefaultMessageValidator()).Validate("message", message);
             (this.UserOrGroupKeyValidator ?? new UserOrGroupKeyValidator()).Validate("userOrGroup", userOrGroup);
@@ -90,9 +90,9 @@ namespace NPushOver
 
             using (var wc = this.GetWebClient())
             {
-                return await ExecuteWebRequest<PushoverResponse>(async () =>
+                return await ExecuteWebRequest<PushoverUserResponse>(async () =>
                 {
-                    var parameters = new PushOverParams { 
+                    var parameters = new PushoverParams { 
                         { "token", this.ApplicationToken }, 
                         { "user", userOrGroup },
                         { "priority", (int)message.Priority },
@@ -118,7 +118,7 @@ namespace NPushOver
                         parameters.Add("timestamp", (int)(TimeZoneInfo.ConvertTimeToUtc(message.Timestamp.Value).Subtract(EPOCH).TotalSeconds));
 
                     var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetV1APIUriFromBase("messages.json"), parameters));
-                    return await ParseResponse<PushoverResponse>(json, wc.ResponseHeaders);
+                    return await ParseResponse<PushoverUserResponse>(json, wc.ResponseHeaders);
                 });
             }
         }
@@ -148,19 +148,19 @@ namespace NPushOver
             }
         }
 
-        public async Task<PushoverResponse> CancelReceiptAsync(string receipt)
+        public async Task<PushoverUserResponse> CancelReceiptAsync(string receipt)
         {
             (this.ReceiptValidator ?? new ReceiptValidator()).Validate("receipt", receipt);
             using (var wc = this.GetWebClient())
             {
-                return await ExecuteWebRequest<PushoverResponse>(async () =>
+                return await ExecuteWebRequest<PushoverUserResponse>(async () =>
                 {
-                    var parameters = new PushOverParams { 
+                    var parameters = new PushoverParams { 
                         { "token", this.ApplicationToken }
                     };
 
                     var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetV1APIUriFromBase("receipts/{0}/cancel.json", receipt), parameters));
-                    return await ParseResponse<PushoverResponse>(json, wc.ResponseHeaders);
+                    return await ParseResponse<PushoverUserResponse>(json, wc.ResponseHeaders);
                 });
             }
         }
@@ -181,7 +181,7 @@ namespace NPushOver
             {
                 return await ExecuteWebRequest<ValidateUserOrGroupResponse>(async () =>
                 {
-                    var parameters = new PushOverParams { 
+                    var parameters = new PushoverParams { 
                         { "token", this.ApplicationToken }, 
                         { "user", userOrGroup }
                     };
@@ -213,7 +213,7 @@ namespace NPushOver
             {
                 return await ExecuteWebRequest<MigrateSubscriptionResponse>(async () =>
                 {
-                    var parameters = new PushOverParams { 
+                    var parameters = new PushoverParams { 
                         { "token", this.ApplicationToken }, 
                         { "subscription", subscription },
                         { "user", userOrGroup },
@@ -249,7 +249,7 @@ namespace NPushOver
             {
                 return await ExecuteWebRequest<AssignLicenseResponse>(async () =>
                 {
-                    var parameters = new PushOverParams { 
+                    var parameters = new PushoverParams { 
                         { "token", this.ApplicationToken }, 
                     };
                     parameters.AddConditional("user", user);
@@ -272,7 +272,7 @@ namespace NPushOver
             {
                 return await ExecuteWebRequest<LoginResponse>(async () =>
                 {
-                    var parameters = new PushOverParams { 
+                    var parameters = new PushoverParams { 
                         { "email", email }, 
                         { "password", password }, 
                     };
@@ -293,7 +293,7 @@ namespace NPushOver
             {
                 return await ExecuteWebRequest<RegisterDeviceResponse>(async () =>
                 {
-                    var parameters = new PushOverParams { 
+                    var parameters = new PushoverParams { 
                         { "secret", secret }, 
                         { "name", deviceName }, 
                         { "os", "O" }, //This is, currently, the only supported value ("Open Client")
@@ -328,7 +328,7 @@ namespace NPushOver
             }
         }
 
-        public async Task<PushoverResponse> DeleteMessagesAsync(string secret, string deviceId, int upToAndIncludingMessageId)
+        public async Task<PushoverUserResponse> DeleteMessagesAsync(string secret, string deviceId, int upToAndIncludingMessageId)
         {
             if (string.IsNullOrEmpty(secret))
                 throw new ArgumentNullException("secret");
@@ -339,20 +339,20 @@ namespace NPushOver
 
             using (var wc = this.GetWebClient())
             {
-                return await ExecuteWebRequest<PushoverResponse>(async () =>
+                return await ExecuteWebRequest<PushoverUserResponse>(async () =>
                 {
-                    var parameters = new PushOverParams { 
+                    var parameters = new PushoverParams { 
                         { "secret", secret }, 
                         { "message", upToAndIncludingMessageId },
                     };
 
                     var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetV1APIUriFromBase("devices/{0}/update_highest_message.json", deviceId), parameters));
-                    return await ParseResponse<PushoverResponse>(json, wc.ResponseHeaders);
+                    return await ParseResponse<PushoverUserResponse>(json, wc.ResponseHeaders);
                 });
             }
         }
 
-        public async Task<PushoverResponse> AcknowledgeMessageAsync(string secret, string receipt)
+        public async Task<PushoverUserResponse> AcknowledgeMessageAsync(string secret, string receipt)
         {
             if (string.IsNullOrEmpty(secret))
                 throw new ArgumentNullException("secret");
@@ -360,14 +360,14 @@ namespace NPushOver
 
             using (var wc = this.GetWebClient())
             {
-                return await ExecuteWebRequest<PushoverResponse>(async () =>
+                return await ExecuteWebRequest<PushoverUserResponse>(async () =>
                 {
-                    var parameters = new PushOverParams { 
+                    var parameters = new PushoverParams { 
                         { "secret", secret }
                     };
 
                     var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetV1APIUriFromBase("receipts/{0}/acknowledge.json", receipt), parameters));
-                    return await ParseResponse<PushoverResponse>(json, wc.ResponseHeaders);
+                    return await ParseResponse<PushoverUserResponse>(json, wc.ResponseHeaders);
                 });
             }
         }
@@ -446,26 +446,26 @@ namespace NPushOver
                 }
                 throw;
             }
-            catch (PushOverException)
+            catch (PushoverException)
             {
                 throw;
             }
             catch (Exception ex)
             {
-                throw new PushOverException("Error retrieving response", ex);
+                throw new PushoverException("Error retrieving response", ex);
             }
         }
 
-        private PushoverResponse ParseErrorResponse(HttpWebResponse response)
+        private PushoverUserResponse ParseErrorResponse(HttpWebResponse response)
         {
-            PushoverResponse errorresponse = null;
+            PushoverUserResponse errorresponse = null;
             try
             {
                 using (var s = response.GetResponseStream())
                 using (var r = new StreamReader(s, this.Encoding))
                 {
                     var json = r.ReadToEnd();
-                    errorresponse = JsonConvert.DeserializeObject<PushoverResponse>(json);
+                    errorresponse = JsonConvert.DeserializeObject<PushoverUserResponse>(json);
                 }
 
                 errorresponse.RateLimitInfo = ParseRateLimitInfo(response.Headers);
@@ -500,7 +500,7 @@ namespace NPushOver
             }
             catch (Exception ex)
             {
-                throw new PushOverException("Error parsing response", ex);
+                throw new PushoverException("Error parsing response", ex);
             }
 
             result.RateLimitInfo = ParseRateLimitInfo(headers);

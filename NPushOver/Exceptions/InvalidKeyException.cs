@@ -1,6 +1,6 @@
-﻿namespace NPushOver.Exceptions
+﻿namespace NPushover.Exceptions
 {
-    public class InvalidKeyException : PushOverException
+    public class InvalidKeyException : PushoverException
     {
         public string Key { get; private set; }
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NPushOver.RequestObjects
+namespace NPushover.RequestObjects
 {
     public class Message
     {
@@ -85,7 +85,7 @@ namespace NPushOver.RequestObjects
 
         //public Message SetSound(Sound sound)
         //{
-        //    if (sound == NPushOver.Sound.None)
+        //    if (sound == NPushover.Sound.None)
         //        this.Sound = null;
         //    else
         //        this.Sound = Enum.GetName(typeof(Sound), sound).ToLowerInvariant();

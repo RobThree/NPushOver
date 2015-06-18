@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NPushOver.ResponseObjects
+namespace NPushover.ResponseObjects
 {
     public class RateLimitInfo
     {

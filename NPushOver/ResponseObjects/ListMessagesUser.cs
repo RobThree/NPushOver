@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace NPushOver.ResponseObjects
+namespace NPushover.ResponseObjects
 {
     public class ListMessagesUser
     {
