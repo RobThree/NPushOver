@@ -16,8 +16,8 @@ namespace NPushover
 {
     // NOTE: This library is not written or supported by Superblock (the creators of Pushover).
 
-    //TODO: Extend with a rate-limiter
-    //TODO: Implement OpenClient API realtime notifications? https://pushover.net/api/client
+    // TODO: Extend with a rate-limiter
+    // TODO: Implement OpenClient API realtime notifications? https://pushover.net/api/client
 
     /// <summary>
     /// Provides asynchronous methods to interact with the Pushover service.

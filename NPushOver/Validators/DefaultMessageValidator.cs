@@ -3,6 +3,9 @@ using System;
 
 namespace NPushover.Validators
 {
+    /// <summary>
+    /// Validates <see cref="Message"/>s.
+    /// </summary>
     public class DefaultMessageValidator : IValidator<Message>
     {
         private const int MAXBODYLENGTH = 1024;
@@ -11,7 +14,18 @@ namespace NPushover.Validators
         private static readonly TimeSpan MINRETRYEVERY = TimeSpan.FromSeconds(30);
         private static readonly TimeSpan MAXRETRYPERIOD = TimeSpan.FromHours(24);
 
-
+        /// <summary>
+        /// Validates the specified <see cref="Message"/> and throws whenever the <see cref="Message"/> is deemed invalid.
+        /// </summary>
+        /// <param name="paramName">The name of the parameter being validated.</param>
+        /// <param name="message">The message to validate.</param>
+        /// <seealso href="https://pushover.net/api">Pushover API documentation</seealso>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when message is null or any of the message's non-nullable properties is null.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown when any of the message'properties contains an invalid (too long or otherwise invalid) value.
+        /// </exception>
         public void Validate(string paramName, Message message)
         {
             if (message == null)
