@@ -122,7 +122,7 @@
 
     /// <summary>
     /// Defines the available Operating System choices for licensing (see 
-    /// <see cref="M:Pushover.AssigLicenseAsync(System.String, System.String)"/>).
+    /// <see cref="M:Pushover.AssigLicenseAsync(System.String,System.String)"/>).
     /// </summary>
     public enum OS
     {
@@ -140,7 +140,7 @@
     }
 
     /// <summary>
-    /// Defines the available audio formats for retrieval (see <see cref="M:Pushover.DownloadSoundAsync(System.String, AudioFormat)"/>).
+    /// Defines the available audio formats for retrieval (see <see cref="M:Pushover.DownloadSoundAsync(System.String,AudioFormat)"/>).
     /// </summary>
     public enum AudioFormat
     {

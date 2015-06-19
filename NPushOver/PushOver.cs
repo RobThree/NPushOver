@@ -274,6 +274,8 @@ namespace NPushover
         /// <param name="receipt">The receipt id to retrieve the information for.</param>
         /// <returns>Returns a <see cref="ReceiptResponse"/>.</returns>
         /// <seealso href="https://pushover.net/api#receipt">Pushover API documentation</seealso>
+        /// <seealso cref="Message.Priority"/>
+        /// <seealso cref="Priority"/>
         /// <exception cref="ArgumentNullException">Thrown when receipt is null.</exception>
         /// <exception cref="InvalidKeyException">Thrown when an invalid receipt id is specified.</exception>
         public async Task<ReceiptResponse> GetReceiptAsync(string receipt)
@@ -622,6 +624,8 @@ namespace NPushover
         /// <param name="receipt">The receipt of the message to acknowledge.</param>
         /// <returns>Returns a <see cref="PushoverUserResponse"/>.</returns>
         /// <seealso href="https://pushover.net/api/client#p2">Pushover API documentation</seealso>
+        /// <seealso cref="Message.Priority"/>
+        /// <seealso cref="Priority"/>
         /// <exception cref="ArgumentNullException">Thrown when secret or receipt is null.</exception>
         /// <exception cref="InvalidKeyException">Thrown when receipt is invalid.</exception>
         public async Task<PushoverUserResponse> AcknowledgeMessageAsync(string secret, string receipt)
