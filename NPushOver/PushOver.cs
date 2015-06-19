@@ -67,12 +67,12 @@ namespace NPushover
         /// Gets/sets the <see cref="IValidator&lt;T&gt;"/> used to validate messages before sending.
         /// </summary>
         public IValidator<Message> MessageValidator { get; set; }
-        
+
         /// <summary>
         /// Gets/sets the <see cref="IValidator&lt;T&gt;"/> used to validate the Application Key.
         /// </summary>
         public IValidator<string> AppKeyValidator { get; set; }
-        
+
         /// <summary>
         /// Gets/sets the <see cref="IValidator&lt;T&gt;"/> used to validate user or group keys.
         /// </summary>
@@ -100,6 +100,7 @@ namespace NPushover
         /// <see cref="DEFAULTBASEURI"/>, no <see cref="IRateLimiter"/> and <see cref="DEFAULTENCODING"/>.
         /// </summary>
         /// <param name="applicationKey">The application key (or token).</param>
+        /// <seealso href="https://pushover.net/api">Pushover API documentation</seealso>
         /// <exception cref="ArgumentNullException">Thrown when applicationKey is null.</exception>
         /// <exception cref="InvalidKeyException">Thrown when an invalid applicationKey is specified.</exception>
         public Pushover(string applicationKey)
@@ -111,6 +112,7 @@ namespace NPushover
         /// </summary>
         /// <param name="applicationKey">The application key (or token).</param>
         /// <param name="baseUri">The base <see cref="Uri"/> to use. Note that this does not include the API version (e.g. 1).</param>
+        /// <seealso href="https://pushover.net/api">Pushover API documentation</seealso>
         /// <exception cref="ArgumentNullException">Thrown when applicationKey or baseUri are null.</exception>
         /// <exception cref="InvalidKeyException">Thrown when an invalid applicationKey is specified.</exception>
         public Pushover(string applicationKey, Uri baseUri)
@@ -123,6 +125,7 @@ namespace NPushover
         /// <param name="applicationKey">The application key (or token).</param>
         /// <param name="baseUri">The base <see cref="Uri"/> to use. Note that this does not include the API version (e.g. 1).</param>
         /// <param name="rateLimiter">The <see cref="IRateLimiter"/> to use.</param>
+        /// <seealso href="https://pushover.net/api">Pushover API documentation</seealso>
         /// <exception cref="ArgumentNullException">Thrown when applicationKey, baseUri or rateLimiter are null.</exception>
         /// <exception cref="InvalidKeyException">Thrown when an invalid applicationKey is specified.</exception>
         public Pushover(string applicationKey, Uri baseUri, IRateLimiter rateLimiter)
@@ -136,6 +139,7 @@ namespace NPushover
         /// <param name="baseUri">The base <see cref="Uri"/> to use. Note that this does not include the API version (e.g. 1).</param>
         /// <param name="rateLimiter">The <see cref="IRateLimiter"/> to use.</param>
         /// <param name="encoding">The <see cref="Encoding"/> to use for exchaning data with Pushover.</param>
+        /// <seealso href="https://pushover.net/api">Pushover API documentation</seealso>
         /// <exception cref="ArgumentNullException">Thrown when applicationKey, baseUri, rateLimiter or Encoding are null.</exception>
         /// <exception cref="InvalidKeyException">Thrown when an invalid applicationKey is specified.</exception>
         public Pushover(string applicationKey, Uri baseUri, IRateLimiter rateLimiter, Encoding encoding)
@@ -161,6 +165,7 @@ namespace NPushover
         /// <param name="message">The <see cref="Message"/> to send.</param>
         /// <param name="userOrGroup">The user or group id to send the message to.</param>
         /// <returns>Returns the <see cref="PushoverUserResponse"/> returned by the server.</returns>
+        /// <seealso href="https://pushover.net/api#messages">Pushover API documentation</seealso>
         /// <exception cref="ArgumentNullException">Thrown when message or user/group arguments are null.</exception>
         /// <exception cref="InvalidKeyException">Thrown when an invalid user/group is specified.</exception>
         public async Task<PushoverUserResponse> SendMessageAsync(Message message, string userOrGroup)
@@ -176,6 +181,7 @@ namespace NPushover
         /// <param name="userOrGroup">The user or group id to send the message to.</param>
         /// <param name="deviceName">The devicename to send the message to.</param>
         /// <returns>Returns the <see cref="PushoverUserResponse"/> returned by the server.</returns>
+        /// <seealso href="https://pushover.net/api#messages">Pushover API documentation</seealso>
         /// <exception cref="ArgumentNullException">Thrown when message or user/group arguments are null.</exception>
         /// <exception cref="InvalidKeyException">Thrown when an invalid user/group is specified.</exception>
         public async Task<PushoverUserResponse> SendMessageAsync(Message message, string userOrGroup, string deviceName)
@@ -191,6 +197,7 @@ namespace NPushover
         /// <param name="userOrGroup">The user or group id to send the message to.</param>
         /// <param name="deviceNames">The devicenames to send the message to.</param>
         /// <returns>Returns the <see cref="PushoverUserResponse"/> returned by the server.</returns>
+        /// <seealso href="https://pushover.net/api#messages">Pushover API documentation</seealso>
         /// <exception cref="ArgumentNullException">Thrown when message or user/group arguments are null.</exception>
         /// <exception cref="InvalidKeyException">Thrown when an invalid user/group is specified.</exception>
         public async Task<PushoverUserResponse> SendMessageAsync(Message message, string userOrGroup, string[] deviceNames)
@@ -243,6 +250,7 @@ namespace NPushover
         /// <summary>
         /// Retrieves, asynchronously, a list of available sounds.
         /// </summary>
+        /// <seealso href="https://pushover.net/api#sounds">Pushover API documentation</seealso>
         /// <returns>Returns a <see cref="SoundsResponse"/>.</returns>
         public async Task<SoundsResponse> ListSoundsAsync()
         {
@@ -261,6 +269,7 @@ namespace NPushover
         /// </summary>
         /// <param name="receipt">The receipt id to retrieve the information for.</param>
         /// <returns>Returns a <see cref="ReceiptResponse"/>.</returns>
+        /// <seealso href="https://pushover.net/api#receipt">Pushover API documentation</seealso>
         /// <exception cref="ArgumentNullException">Thrown when receipt is null.</exception>
         /// <exception cref="InvalidKeyException">Thrown when an invalid receipt id is specified.</exception>
         public async Task<ReceiptResponse> GetReceiptAsync(string receipt)
@@ -281,6 +290,7 @@ namespace NPushover
         /// </summary>
         /// <param name="receipt">The receipt id to cancel.</param>
         /// <returns>Returns a <see cref="PushoverUserResponse"/>.</returns>
+        /// <seealso href="https://pushover.net/api#receipt">Pushover API documentation</seealso>
         /// <exception cref="ArgumentNullException">Thrown when receipt is null.</exception>
         /// <exception cref="InvalidKeyException">Thrown when an invalid receipt id is specified.</exception>
         public async Task<PushoverUserResponse> CancelReceiptAsync(string receipt)
@@ -309,6 +319,7 @@ namespace NPushover
         /// Currently, this method throws when the user/group is not known by the Pushover service; this is likely to 
         /// change in the future.
         /// </remarks>
+        /// <seealso href="https://pushover.net/api#verification">Pushover API documentation</seealso>
         /// <exception cref="ArgumentNullException">Thrown when user/group id is null.</exception>
         /// <exception cref="InvalidKeyException">Thrown when user/group id is invalid.</exception>
         public async Task<ValidateUserOrGroupResponse> ValidateUserOrGroupAsync(string userOrGroup)
@@ -320,12 +331,13 @@ namespace NPushover
         /// Validates, asynchronously, a specified device for a user or group with the Pushover service.
         /// </summary>
         /// <param name="userOrGroup">The user or group id to validate the device for.</param>
-        /// <param name="device">The devicename to validate.</param>
+        /// <param name="deviceName">The devicename to validate.</param>
         /// <returns>Returns a <see cref="ValidateUserOrGroupResponse"/>.</returns>
         /// <remarks>
         /// Currently, this method throws when the user/group and/or devicename is not known by the Pushover service;
         /// this is likely to change in the future.
         /// </remarks>
+        /// <seealso href="https://pushover.net/api#verification">Pushover API documentation</seealso>
         /// <exception cref="ArgumentNullException">Thrown when user/group id or the devicename is null.</exception>
         /// <exception cref="InvalidKeyException">Thrown when user/group id or the devicename is invalid.</exception>
         public async Task<ValidateUserOrGroupResponse> ValidateUserOrGroupAsync(string userOrGroup, string deviceName)
@@ -350,19 +362,55 @@ namespace NPushover
             }
         }
 
-        public async Task<MigrateSubscriptionResponse> MigrateSubscriptionAsync(string subscription, string userOrGroup)
+        /// <summary>
+        /// Migrates a specific subscription to a user/group.
+        /// </summary>
+        /// <param name="subscription">Subscription code to migrate.</param>
+        /// <param name="user">User code to migrate the subscription to.</param>
+        /// <param name="device">The device name that the subscription should be limited to.</param>
+        /// <returns>Returns a <see cref="MigrateSubscriptionResponse"/>.</returns>
+        /// <remarks>Applications that formerly collected Pushover user keys are encouraged to migrate to subscription keys.</remarks>
+        /// <seealso href="https://pushover.net/api/subscriptions#migration"">Pushover API documentation</seealso>
+        /// <exception cref="ArgumentNullException">Thrown when subscription or user is null.</exception>
+        /// <exception cref="InvalidKeyException">Thrown when user or devicename are invalid.</exception>
+        public async Task<MigrateSubscriptionResponse> MigrateSubscriptionAsync(string subscription, string user)
         {
-            return await MigrateSubscriptionAsync(subscription, userOrGroup, null);
+            return await MigrateSubscriptionAsync(subscription, user, null);
         }
 
-        public async Task<MigrateSubscriptionResponse> MigrateSubscriptionAsync(string subscription, string userOrGroup, string device)
+        /// <summary>
+        /// Migrates a specific subscription to a user/group and limits it to a specified device.
+        /// </summary>
+        /// <param name="subscription">Subscription code to migrate.</param>
+        /// <param name="user">User code to migrate the subscription to.</param>
+        /// <param name="device">The device name that the subscription should be limited to.</param>
+        /// <returns>Returns a <see cref="MigrateSubscriptionResponse"/>.</returns>
+        /// <remarks>Applications that formerly collected Pushover user keys are encouraged to migrate to subscription keys.</remarks>
+        /// <seealso href="https://pushover.net/api/subscriptions#migration"">Pushover API documentation</seealso>
+        /// <exception cref="ArgumentNullException">Thrown when subscription or user is null.</exception>
+        /// <exception cref="InvalidKeyException">Thrown when user or devicename are invalid.</exception>
+        public async Task<MigrateSubscriptionResponse> MigrateSubscriptionAsync(string subscription, string user, string device)
         {
-            return await MigrateSubscriptionAsync(subscription, userOrGroup, null, null);
+            return await MigrateSubscriptionAsync(subscription, user, null, null);
         }
 
-        public async Task<MigrateSubscriptionResponse> MigrateSubscriptionAsync(string subscription, string userOrGroup, string device, string sound)
+        /// <summary>
+        /// Migrates a specific subscription to a user/group and limits it to a specified device, setting the user's preferred default sound.
+        /// </summary>
+        /// <param name="subscription">Subscription code to migrate.</param>
+        /// <param name="user">User code to migrate the subscription to.</param>
+        /// <param name="device">The device name that the subscription should be limited to.</param>
+        /// <param name="sound">The user's preferred default sound.</param>
+        /// <returns>Returns a <see cref="MigrateSubscriptionResponse"/>.</returns>
+        /// <remarks>Applications that formerly collected Pushover user keys are encouraged to migrate to subscription keys.</remarks>
+        /// <seealso href="https://pushover.net/api/subscriptions#migration"">Pushover API documentation</seealso>
+        /// <exception cref="ArgumentNullException">Thrown when subscription or user is null.</exception>
+        /// <exception cref="InvalidKeyException">Thrown when user or devicename are invalid.</exception>
+        public async Task<MigrateSubscriptionResponse> MigrateSubscriptionAsync(string subscription, string user, string device, string sound)
         {
-            (this.UserOrGroupKeyValidator ?? new UserOrGroupKeyValidator()).Validate("userOrGroup", userOrGroup);
+            if (string.IsNullOrEmpty(subscription))
+                throw ArgumentNullException("subscription");
+            (this.UserOrGroupKeyValidator ?? new UserOrGroupKeyValidator()).Validate("user", user);
             if (device != null)
                 (this.DeviceNameValidator ?? new DeviceNameValidator()).Validate("device", device);
 
@@ -373,7 +421,7 @@ namespace NPushover
                     var parameters = new NameValueCollection { 
                         { "token", this.ApplicationKey }, 
                         { "subscription", subscription },
-                        { "user", userOrGroup },
+                        { "user", user },
                     };
                     parameters.AddConditional("device_name", device);
                     parameters.AddConditional("sound", sound);
