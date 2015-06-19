@@ -25,6 +25,7 @@ namespace NPushover
         private static readonly AssemblyName ASSEMBLYNAME = typeof(Pushover).Assembly.GetName();
         private static readonly DateTime EPOCH = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
+        #region Public 'consts'
         /// <summary>
         /// The default <see cref="Uri"/> used by Pushover.
         /// </summary>
@@ -34,7 +35,9 @@ namespace NPushover
         /// The default <see cref="Encoding"/> used by Pushover.
         /// </summary>
         public static readonly Encoding DEFAULTENCODING = Encoding.UTF8;
+        #endregion
 
+        #region Public properties
         /// <summary>
         /// Gets the encoding used for exchanging messages with Pushover.
         /// </summary>
@@ -61,40 +64,44 @@ namespace NPushover
         public IWebProxy Proxy { get; set; }
 
         /// <summary>
-        /// Gets/sets the <see cref="IValidator&lt;Message&gt;"/> used to validate messages before sending.
+        /// Gets/sets the <see cref="IValidator&lt;T&gt;"/> used to validate messages before sending.
         /// </summary>
         public IValidator<Message> MessageValidator { get; set; }
         
         /// <summary>
-        /// Gets/sets the <see cref="IValidator&lt;string&gt;"/> used to validate the Application Key.
+        /// Gets/sets the <see cref="IValidator&lt;T&gt;"/> used to validate the Application Key.
         /// </summary>
         public IValidator<string> AppKeyValidator { get; set; }
         
         /// <summary>
-        /// Gets/sets the <see cref="IValidator&lt;string&gt;"/> used to validate user or group keys.
+        /// Gets/sets the <see cref="IValidator&lt;T&gt;"/> used to validate user or group keys.
         /// </summary>
         public IValidator<string> UserOrGroupKeyValidator { get; set; }
 
         /// <summary>
-        /// Gets/sets the <see cref="IValidator&lt;string&gt;"/> used to validate devicenames.
+        /// Gets/sets the <see cref="IValidator&lt;T&gt;"/> used to validate devicenames.
         /// </summary>
         public IValidator<string> DeviceNameValidator { get; set; }
 
         /// <summary>
-        /// Gets/sets the <see cref="IValidator&lt;string&gt;"/> used to receipts.
+        /// Gets/sets the <see cref="IValidator&lt;T&gt;"/> used to receipts.
         /// </summary>
         public IValidator<string> ReceiptValidator { get; set; }
 
         /// <summary>
-        /// Gets/sets the <see cref="IValidator&lt;string&gt;"/> used to validate e-mail addresses.
+        /// Gets/sets the <see cref="IValidator&lt;T&gt;"/> used to validate e-mail addresses.
         /// </summary>
         public IValidator<string> EmailValidator { get; set; }
+        #endregion
 
+        #region Constructors
         /// <summary>
         /// Initializes a new instance of <see cref="Pushover"/> with the specified applicationkey, the 
         /// <see cref="DEFAULTBASEURI"/>, no <see cref="IRateLimiter"/> and <see cref="DEFAULTENCODING"/>.
         /// </summary>
         /// <param name="applicationKey">The application key (or token).</param>
+        /// <exception cref="ArgumentNullException">Thrown when applicationKey is null.</exception>
+        /// <exception cref="InvalidKeyException">Thrown when an invalid applicationKey is specified.</exception>
         public Pushover(string applicationKey)
             : this(applicationKey, DEFAULTBASEURI) { }
 
@@ -104,6 +111,8 @@ namespace NPushover
         /// </summary>
         /// <param name="applicationKey">The application key (or token).</param>
         /// <param name="baseUri">The base <see cref="Uri"/> to use. Note that this does not include the API version (e.g. 1).</param>
+        /// <exception cref="ArgumentNullException">Thrown when applicationKey or baseUri are null.</exception>
+        /// <exception cref="InvalidKeyException">Thrown when an invalid applicationKey is specified.</exception>
         public Pushover(string applicationKey, Uri baseUri)
             : this(applicationKey, baseUri, new NullRateLimiter()) { }
 
@@ -114,6 +123,8 @@ namespace NPushover
         /// <param name="applicationKey">The application key (or token).</param>
         /// <param name="baseUri">The base <see cref="Uri"/> to use. Note that this does not include the API version (e.g. 1).</param>
         /// <param name="rateLimiter">The <see cref="IRateLimiter"/> to use.</param>
+        /// <exception cref="ArgumentNullException">Thrown when applicationKey, baseUri or rateLimiter are null.</exception>
+        /// <exception cref="InvalidKeyException">Thrown when an invalid applicationKey is specified.</exception>
         public Pushover(string applicationKey, Uri baseUri, IRateLimiter rateLimiter)
             : this(applicationKey, baseUri, rateLimiter, DEFAULTENCODING) { }
 
@@ -125,6 +136,8 @@ namespace NPushover
         /// <param name="baseUri">The base <see cref="Uri"/> to use. Note that this does not include the API version (e.g. 1).</param>
         /// <param name="rateLimiter">The <see cref="IRateLimiter"/> to use.</param>
         /// <param name="encoding">The <see cref="Encoding"/> to use for exchaning data with Pushover.</param>
+        /// <exception cref="ArgumentNullException">Thrown when applicationKey, baseUri, rateLimiter or Encoding are null.</exception>
+        /// <exception cref="InvalidKeyException">Thrown when an invalid applicationKey is specified.</exception>
         public Pushover(string applicationKey, Uri baseUri, IRateLimiter rateLimiter, Encoding encoding)
         {
             (this.AppKeyValidator ?? new ApplicationKeyValidator()).Validate("applicationKey", applicationKey);
@@ -140,6 +153,7 @@ namespace NPushover
             this.RateLimiter = rateLimiter;
             this.Encoding = encoding;
         }
+        #endregion
 
         /// <summary>
         /// Sends, asynchronously, the specified <see cref="Message"/> using Pushover to the specified user or group.
@@ -147,6 +161,8 @@ namespace NPushover
         /// <param name="message">The <see cref="Message"/> to send.</param>
         /// <param name="userOrGroup">The user or group id to send the message to.</param>
         /// <returns>Returns the <see cref="PushoverUserResponse"/> returned by the server.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when message or user/group arguments are null.</exception>
+        /// <exception cref="InvalidKeyException">Thrown when an invalid user/group is specified.</exception>
         public async Task<PushoverUserResponse> SendMessageAsync(Message message, string userOrGroup)
         {
             return await this.SendMessageAsync(message, userOrGroup, (string[])null);
@@ -160,6 +176,8 @@ namespace NPushover
         /// <param name="userOrGroup">The user or group id to send the message to.</param>
         /// <param name="deviceName">The devicename to send the message to.</param>
         /// <returns>Returns the <see cref="PushoverUserResponse"/> returned by the server.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when message or user/group arguments are null.</exception>
+        /// <exception cref="InvalidKeyException">Thrown when an invalid user/group is specified.</exception>
         public async Task<PushoverUserResponse> SendMessageAsync(Message message, string userOrGroup, string deviceName)
         {
             return await this.SendMessageAsync(message, userOrGroup, new[] { deviceName });
@@ -173,6 +191,8 @@ namespace NPushover
         /// <param name="userOrGroup">The user or group id to send the message to.</param>
         /// <param name="deviceNames">The devicenames to send the message to.</param>
         /// <returns>Returns the <see cref="PushoverUserResponse"/> returned by the server.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when message or user/group arguments are null.</exception>
+        /// <exception cref="InvalidKeyException">Thrown when an invalid user/group is specified.</exception>
         public async Task<PushoverUserResponse> SendMessageAsync(Message message, string userOrGroup, string[] deviceNames)
         {
             (this.MessageValidator ?? new DefaultMessageValidator()).Validate("message", message);
@@ -220,6 +240,10 @@ namespace NPushover
             }
         }
 
+        /// <summary>
+        /// Retrieves, asynchronously, a list of available sounds.
+        /// </summary>
+        /// <returns>Returns a <see cref="SoundsResponse"/>.</returns>
         public async Task<SoundsResponse> ListSoundsAsync()
         {
             using (var wc = this.GetWebClient())
@@ -232,6 +256,13 @@ namespace NPushover
             }
         }
 
+        /// <summary>
+        /// Retrieves, asynchronously, information about a receipt.
+        /// </summary>
+        /// <param name="receipt">The receipt id to retrieve the information for.</param>
+        /// <returns>Returns a <see cref="ReceiptResponse"/>.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when receipt is null.</exception>
+        /// <exception cref="InvalidKeyException">Thrown when an invalid receipt id is specified.</exception>
         public async Task<ReceiptResponse> GetReceiptAsync(string receipt)
         {
             (this.ReceiptValidator ?? new ReceiptValidator()).Validate("receipt", receipt);
@@ -245,6 +276,13 @@ namespace NPushover
             }
         }
 
+        /// <summary>
+        /// Cancels, asynchronously, a receipt.
+        /// </summary>
+        /// <param name="receipt">The receipt id to cancel.</param>
+        /// <returns>Returns a <see cref="PushoverUserResponse"/>.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when receipt is null.</exception>
+        /// <exception cref="InvalidKeyException">Thrown when an invalid receipt id is specified.</exception>
         public async Task<PushoverUserResponse> CancelReceiptAsync(string receipt)
         {
             (this.ReceiptValidator ?? new ReceiptValidator()).Validate("receipt", receipt);
@@ -262,17 +300,39 @@ namespace NPushover
             }
         }
 
+        /// <summary>
+        /// Validates, asynchronously, a specified user or group with the Pushover service.
+        /// </summary>
+        /// <param name="userOrGroup">The user or group id to validate.</param>
+        /// <returns>Returns a <see cref="ValidateUserOrGroupResponse"/>.</returns>
+        /// <remarks>
+        /// Currently, this method throws when the user/group is not known by the Pushover service; this is likely to 
+        /// change in the future.
+        /// </remarks>
+        /// <exception cref="ArgumentNullException">Thrown when user/group id is null.</exception>
+        /// <exception cref="InvalidKeyException">Thrown when user/group id is invalid.</exception>
         public async Task<ValidateUserOrGroupResponse> ValidateUserOrGroupAsync(string userOrGroup)
         {
             return await ValidateUserOrGroupAsync(userOrGroup, null);
         }
 
-        //NOTE: THROWS!! When user is unknown/invalid AND/OR device is unknown/invalid, otherwise returns
-        public async Task<ValidateUserOrGroupResponse> ValidateUserOrGroupAsync(string userOrGroup, string device)
+        /// <summary>
+        /// Validates, asynchronously, a specified device for a user or group with the Pushover service.
+        /// </summary>
+        /// <param name="userOrGroup">The user or group id to validate the device for.</param>
+        /// <param name="device">The devicename to validate.</param>
+        /// <returns>Returns a <see cref="ValidateUserOrGroupResponse"/>.</returns>
+        /// <remarks>
+        /// Currently, this method throws when the user/group and/or devicename is not known by the Pushover service;
+        /// this is likely to change in the future.
+        /// </remarks>
+        /// <exception cref="ArgumentNullException">Thrown when user/group id or the devicename is null.</exception>
+        /// <exception cref="InvalidKeyException">Thrown when user/group id or the devicename is invalid.</exception>
+        public async Task<ValidateUserOrGroupResponse> ValidateUserOrGroupAsync(string userOrGroup, string deviceName)
         {
             (this.UserOrGroupKeyValidator ?? new UserOrGroupKeyValidator()).Validate("userOrGroup", userOrGroup);
-            if (device != null)
-                (this.DeviceNameValidator ?? new DeviceNameValidator()).Validate("device", device);
+            if (deviceName != null)
+                (this.DeviceNameValidator ?? new DeviceNameValidator()).Validate("device", deviceName);
 
             using (var wc = this.GetWebClient())
             {
@@ -282,7 +342,7 @@ namespace NPushover
                         { "token", this.ApplicationKey }, 
                         { "user", userOrGroup }
                     };
-                    parameters.AddConditional("device", device);
+                    parameters.AddConditional("device", deviceName);
 
                     var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetV1APIUriFromBase("users/validate.json"), parameters));
                     return await ParseResponse<ValidateUserOrGroupResponse>(json, wc.ResponseHeaders);
