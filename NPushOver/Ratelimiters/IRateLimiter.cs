@@ -1,5 +1,8 @@
 ﻿namespace NPushover.Ratelimiters
 {
+    /// <summary>
+    /// Provides the base ratelimiter interface for NPushover ratelimiters.
+    /// </summary>
     public interface IRateLimiter
     {
         //TODO: Define
