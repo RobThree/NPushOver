@@ -14,11 +14,14 @@ using System.Threading.Tasks;
 
 namespace NPushover
 {
-    //Based on documentation from https://pushover.net/api
-    //TODO: Extend with a rate-limiter
+    // NOTE: This library is not written or supported by Superblock (the creators of Pushover).
 
+    //TODO: Extend with a rate-limiter
     //TODO: Implement OpenClient API realtime notifications? https://pushover.net/api/client
 
+    /// <summary>
+    /// Provides asynchronous methods to interact with the Pushover service.
+    /// </summary>
     public class Pushover
     {
         private static readonly string HOMEURL = "https://github.com/RobThree/NPushOver";
@@ -159,6 +162,7 @@ namespace NPushover
         }
         #endregion
 
+        #region Public methods
         /// <summary>
         /// Sends, asynchronously, the specified <see cref="Message"/> using Pushover to the specified user or group.
         /// </summary>
@@ -363,14 +367,13 @@ namespace NPushover
         }
 
         /// <summary>
-        /// Migrates a specific subscription to a user/group.
+        /// Migrates, asynchronously, a specific subscription to a user/group.
         /// </summary>
         /// <param name="subscription">Subscription code to migrate.</param>
         /// <param name="user">User code to migrate the subscription to.</param>
-        /// <param name="device">The device name that the subscription should be limited to.</param>
         /// <returns>Returns a <see cref="MigrateSubscriptionResponse"/>.</returns>
         /// <remarks>Applications that formerly collected Pushover user keys are encouraged to migrate to subscription keys.</remarks>
-        /// <seealso href="https://pushover.net/api/subscriptions#migration"">Pushover API documentation</seealso>
+        /// <seealso href="https://pushover.net/api/subscriptions#migration">Pushover API documentation</seealso>
         /// <exception cref="ArgumentNullException">Thrown when subscription or user is null.</exception>
         /// <exception cref="InvalidKeyException">Thrown when user or devicename are invalid.</exception>
         public async Task<MigrateSubscriptionResponse> MigrateSubscriptionAsync(string subscription, string user)
@@ -379,14 +382,14 @@ namespace NPushover
         }
 
         /// <summary>
-        /// Migrates a specific subscription to a user/group and limits it to a specified device.
+        /// Migrates, asynchronously, a specific subscription to a user/group and limits it to a specified device.
         /// </summary>
         /// <param name="subscription">Subscription code to migrate.</param>
         /// <param name="user">User code to migrate the subscription to.</param>
         /// <param name="device">The device name that the subscription should be limited to.</param>
         /// <returns>Returns a <see cref="MigrateSubscriptionResponse"/>.</returns>
         /// <remarks>Applications that formerly collected Pushover user keys are encouraged to migrate to subscription keys.</remarks>
-        /// <seealso href="https://pushover.net/api/subscriptions#migration"">Pushover API documentation</seealso>
+        /// <seealso href="https://pushover.net/api/subscriptions#migration">Pushover API documentation</seealso>
         /// <exception cref="ArgumentNullException">Thrown when subscription or user is null.</exception>
         /// <exception cref="InvalidKeyException">Thrown when user or devicename are invalid.</exception>
         public async Task<MigrateSubscriptionResponse> MigrateSubscriptionAsync(string subscription, string user, string device)
@@ -395,7 +398,7 @@ namespace NPushover
         }
 
         /// <summary>
-        /// Migrates a specific subscription to a user/group and limits it to a specified device, setting the user's preferred default sound.
+        /// Migrates, asynchronously, a specific subscription to a user/group and limits it to a specified device, setting the user's preferred default sound.
         /// </summary>
         /// <param name="subscription">Subscription code to migrate.</param>
         /// <param name="user">User code to migrate the subscription to.</param>
@@ -403,13 +406,13 @@ namespace NPushover
         /// <param name="sound">The user's preferred default sound.</param>
         /// <returns>Returns a <see cref="MigrateSubscriptionResponse"/>.</returns>
         /// <remarks>Applications that formerly collected Pushover user keys are encouraged to migrate to subscription keys.</remarks>
-        /// <seealso href="https://pushover.net/api/subscriptions#migration"">Pushover API documentation</seealso>
+        /// <seealso href="https://pushover.net/api/subscriptions#migration">Pushover API documentation</seealso>
         /// <exception cref="ArgumentNullException">Thrown when subscription or user is null.</exception>
         /// <exception cref="InvalidKeyException">Thrown when user or devicename are invalid.</exception>
         public async Task<MigrateSubscriptionResponse> MigrateSubscriptionAsync(string subscription, string user, string device, string sound)
         {
             if (string.IsNullOrEmpty(subscription))
-                throw ArgumentNullException("subscription");
+                throw new ArgumentNullException("subscription");
             (this.UserOrGroupKeyValidator ?? new UserOrGroupKeyValidator()).Validate("user", user);
             if (device != null)
                 (this.DeviceNameValidator ?? new DeviceNameValidator()).Validate("device", device);
@@ -432,11 +435,30 @@ namespace NPushover
             }
         }
 
+        /// <summary>
+        /// Assigns, asynchronously, a license to a specific user or e-mail address.
+        /// </summary>
+        /// <param name="user">The user id (required unless e-mail is specified).</param>
+        /// <param name="email">The user's e-mail address (required unless user is specified).</param>
+        /// <returns>Returns a <see cref="AssignLicenseResponse"/>.</returns>
+        /// <seealso href="https://pushover.net/api/licensing#assign">Pushover API documentation</seealso>
+        /// <exception cref="InvalidOperationException">When user and email are both null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Invalid <see cref="OS"/> specified.</exception>
         public async Task<AssignLicenseResponse> AssignLicenseAsync(string user, string email)
         {
             return await AssignLicenseAsync(user, email, OS.Any);
         }
 
+        /// <summary>
+        /// Assigns, asynchronously, a license to a specific user or e-mail address and specified <see cref="OS"/>.
+        /// </summary>
+        /// <param name="user">The user id (required unless e-mail is specified).</param>
+        /// <param name="email">The user's e-mail address (required unless user is specified).</param>
+        /// <param name="os">The <see cref="OS"/> to assign the license to.</param>
+        /// <returns>Returns a <see cref="AssignLicenseResponse"/>.</returns>
+        /// <seealso href="https://pushover.net/api/licensing#assign">Pushover API documentation</seealso>
+        /// <exception cref="InvalidOperationException">When user and email are both null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Invalid <see cref="OS"/> specified.</exception>
         public async Task<AssignLicenseResponse> AssignLicenseAsync(string user, string email, OS os)
         {
             if (user != null)
@@ -467,6 +489,15 @@ namespace NPushover
             }
         }
 
+        /// <summary>
+        /// Retrieves, asynchronously, the user's Pushover key and secret.
+        /// </summary>
+        /// <param name="email">The user's e-mail address.</param>
+        /// <param name="password">The user's password.</param>
+        /// <returns>Returns a <see cref="LoginResponse"/>.</returns>
+        /// <seealso href="https://pushover.net/api/client#login">Pushover API documentation</seealso>
+        /// <exception cref="ArgumentNullException">Thrown when e-mail or password is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when e-mail is invalid.</exception>
         public async Task<LoginResponse> LoginAsync(string email, string password)
         {
             (this.EmailValidator ?? new EMailValidator()).Validate("email", email);
@@ -488,6 +519,15 @@ namespace NPushover
             }
         }
 
+        /// <summary>
+        /// Registers, asynchronously, a device.
+        /// </summary>
+        /// <param name="secret">The user's secret.</param>
+        /// <param name="deviceName">The short name of the device.</param>
+        /// <returns>Returns a <see cref="RegisterDeviceResponse"/>.</returns>
+        /// <seealso href="https://pushover.net/api/client#register">Pushover API documentation</seealso>
+        /// <exception cref="ArgumentNullException">Thrown when secret or devicename are null.</exception>
+        /// <exception cref="InvalidKeyException">Thrown when devicename is invalid.</exception>
         public async Task<RegisterDeviceResponse> RegisterDeviceAsync(string secret, string deviceName)
         {
             if (string.IsNullOrEmpty(secret))
@@ -516,6 +556,14 @@ namespace NPushover
             }
         }
 
+        /// <summary>
+        /// Retrieves, asynchronously, all existing messages waiting for the device.
+        /// </summary>
+        /// <param name="secret">The user's secret.</param>
+        /// <param name="deviceId">Device id for which to download the messages.</param>
+        /// <returns>Returns a <see cref="ListMessagesResponse"/>.</returns>
+        /// <seealso href="https://pushover.net/api/client#download">Pushover API documentation</seealso>
+        /// <exception cref="ArgumentNullException">Thrown when secret or device id is null.</exception>
         public async Task<ListMessagesResponse> ListMessagesAsync(string secret, string deviceId)
         {
             if (string.IsNullOrEmpty(secret))
@@ -533,6 +581,16 @@ namespace NPushover
             }
         }
 
+        /// <summary>
+        /// Deletes, asynchronously, all message up to, and including, the specified message id.
+        /// </summary>
+        /// <param name="secret">The user's secret.</param>
+        /// <param name="deviceId">Device id for which to delete the messages.</param>
+        /// <param name="upToAndIncludingMessageId">Message id of message up to, and including, to delete.</param>
+        /// <returns>Returns a <see cref="PushoverUserResponse"/>.</returns>
+        /// <seealso href="https://pushover.net/api/client#delete">Pushover API documentation</seealso>
+        /// <exception cref="ArgumentNullException">Thrown when secret or device id is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when message id is invalid.</exception>
         public async Task<PushoverUserResponse> DeleteMessagesAsync(string secret, string deviceId, int upToAndIncludingMessageId)
         {
             if (string.IsNullOrEmpty(secret))
@@ -557,6 +615,15 @@ namespace NPushover
             }
         }
 
+        /// <summary>
+        /// Acknowledges, asynchronously, an emergency-priority message.
+        /// </summary>
+        /// <param name="secret">The user's secret.</param>
+        /// <param name="receipt">The receipt of the message to acknowledge.</param>
+        /// <returns>Returns a <see cref="PushoverUserResponse"/>.</returns>
+        /// <seealso href="https://pushover.net/api/client#p2">Pushover API documentation</seealso>
+        /// <exception cref="ArgumentNullException">Thrown when secret or receipt is null.</exception>
+        /// <exception cref="InvalidKeyException">Thrown when receipt is invalid.</exception>
         public async Task<PushoverUserResponse> AcknowledgeMessageAsync(string secret, string receipt)
         {
             if (string.IsNullOrEmpty(secret))
@@ -577,6 +644,13 @@ namespace NPushover
             }
         }
 
+        /// <summary>
+        /// Downloads, asynchronously, a specified icon from the Pushover service.
+        /// </summary>
+        /// <param name="iconName">Name of the icon to download.</param>
+        /// <returns>Returns a <see cref="Stream"/>.</returns>
+        /// <seealso href="https://pushover.net/api/client#download">Pushover API documentation</seealso>
+        /// <exception cref="ArgumentNullException">Thrown when iconname is null.</exception>
         public async Task<Stream> DownloadIconAsync(string iconName)
         {
             if (string.IsNullOrEmpty(iconName))
@@ -584,48 +658,98 @@ namespace NPushover
             return await this.DownloadFileAsync(GetIconUriFromBase("{0}.png", iconName));
         }
 
-        public async Task<Stream> DownloadSoundAsync(string soundname)
+        /// <summary>
+        /// Downloads, asynchronously, a specified sound from the Pushover service in Mp3 format.
+        /// </summary>
+        /// <param name="soundName">Name of the sound to download.</param>
+        /// <returns>Returns a <see cref="Stream"/>.</returns>
+        /// <seealso href="https://pushover.net/api/client#download">Pushover API documentation</seealso>
+        /// <exception cref="ArgumentNullException">Thrown when soundname is null.</exception>
+        public async Task<Stream> DownloadSoundAsync(string soundName)
         {
-            return await DownloadSoundAsync(soundname, SoundType.Mp3);
+            return await DownloadSoundAsync(soundName, AudioFormat.Mp3);
         }
 
-        public async Task<Stream> DownloadSoundAsync(string soundName, SoundType soundType)
+        /// <summary>
+        /// Downloads, asynchronously, a specified sound from the Pushover service in the specified format.
+        /// </summary>
+        /// <param name="soundName">Name of the sound to download.</param>
+        /// <param name="audioFormat"><see cref="AudioFormat"/> to download.</param>
+        /// <returns>Returns a <see cref="Stream"/>.</returns>
+        /// <seealso href="https://pushover.net/api/client#download">Pushover API documentation</seealso>
+        /// <exception cref="ArgumentNullException">Thrown when soundname is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when audioFormat is invalid.</exception>
+        public async Task<Stream> DownloadSoundAsync(string soundName, AudioFormat audioFormat)
         {
             if (string.IsNullOrEmpty(soundName))
                 throw new ArgumentNullException("soundName");
-            if (!Enum.IsDefined(typeof(SoundType), soundType))
-                throw new ArgumentOutOfRangeException("soundType");
+            if (!Enum.IsDefined(typeof(AudioFormat), audioFormat))
+                throw new ArgumentOutOfRangeException("audioFormat");
 
-            return await this.DownloadFileAsync(GetSoundsUriFromBase("{0}.{1}", soundName, soundType.ToString().ToLowerInvariant()));
+            return await this.DownloadFileAsync(GetSoundsUriFromBase("{0}.{1}", soundName, audioFormat.ToString().ToLowerInvariant()));
         }
+        #endregion
 
+        #region Private methods
+        /// <summary>
+        /// Downloads, asynchronously, a specified file.
+        /// </summary>
+        /// <param name="uri"><see cref="Uri"/> of file to download.</param>
+        /// <returns>Returns a <see cref="Stream"/>.</returns>
         private async Task<Stream> DownloadFileAsync(Uri uri)
         {
             using (var wc = this.GetWebClient())
                 return await wc.OpenReadTaskAsync(uri);
         }
 
+        /// <summary>
+        /// Returns a relative <see cref="Uri"/> based on the <see cref="BaseUri"/>.
+        /// </summary>
+        /// <param name="relative">Relative path from the <see cref="BaseUri"/>.</param>
+        /// <param name="args">An object array that contains zero or more objects to format.</param>
+        /// <returns>Returns a relative <see cref="Uri"/> based on the <see cref="BaseUri"/>.</returns>
         private Uri GetUriFromBase(string relative, params object[] args)
         {
             return new Uri(this.BaseUri, string.Format(relative, args));
         }
 
-
+        /// <summary>
+        /// Returns the V1 api <see cref="Uri"/> based on the <see cref="BaseUri"/>.
+        /// </summary>
+        /// <param name="relative">Relative path from the V1 API <see cref="Uri"/>.</param>
+        /// <param name="args">An object array that contains zero or more objects to format.</param>
+        /// <returns>Returns the V1 api <see cref="Uri"/> based on the <see cref="BaseUri"/>.</returns>
         private Uri GetV1APIUriFromBase(string relative, params object[] args)
         {
             return new Uri(GetUriFromBase("1/"), string.Format(relative, args));
         }
 
+        /// <summary>
+        /// Returns an icon <see cref="Uri"/> based on the <see cref="BaseUri"/>.
+        /// </summary>
+        /// <param name="relative">Relative path for the icon.</param>
+        /// <param name="args">An object array that contains zero or more objects to format.</param>
+        /// <returns>Returns an icon <see cref="Uri"/> based on the <see cref="BaseUri"/>.</returns>
         private Uri GetIconUriFromBase(string relative, params object[] args)
         {
             return new Uri(GetUriFromBase("icons/"), string.Format(relative, args));
         }
 
+        /// <summary>
+        /// Returns a sound <see cref="Uri"/> based on the <see cref="BaseUri"/>.
+        /// </summary>
+        /// <param name="relative">Relative path for the sound.</param>
+        /// <param name="args">An object array that contains zero or more objects to format.</param>
+        /// <returns>Returns a sound <see cref="Uri"/> based on the <see cref="BaseUri"/>.</returns>
         private Uri GetSoundsUriFromBase(string relative, params object[] args)
         {
             return new Uri(GetUriFromBase("sounds/"), string.Format(relative, args));
         }
 
+        /// <summary>
+        /// Executes a specified function asynchronously assuming it returns a <see cref="PushoverResponse"/> and
+        /// handles any web exceptions and other problems as best as possible (or re-throws).
+        /// </summary>
         private async Task<T> ExecuteWebRequest<T>(Func<Task<T>> func)
             where T : PushoverResponse
         {
@@ -661,6 +785,10 @@ namespace NPushover
             }
         }
 
+        /// <summary>
+        /// When Pushover returns an error it is returned in a (sort of...) structured format; this method tries to
+        /// parse the result and extract possible information from it.
+        /// </summary>
         private PushoverUserResponse ParseErrorResponse(HttpWebResponse response)
         {
             PushoverUserResponse errorresponse = null;
@@ -682,6 +810,9 @@ namespace NPushover
             return errorresponse;
         }
 
+        /// <summary>
+        /// Parses, possible, rate-limiting information from a Pushover response if any.
+        /// </summary>
         private static RateLimitInfo ParseRateLimitInfo(WebHeaderCollection headers)
         {
             int limit, remaining, reset;
@@ -695,6 +826,9 @@ namespace NPushover
             return null;
         }
 
+        /// <summary>
+        /// Parses a Pushover JSON response asynchronously.
+        /// </summary>
         private static async Task<T> ParseResponse<T>(string json, WebHeaderCollection headers)
             where T : PushoverResponse
         {
@@ -715,6 +849,9 @@ namespace NPushover
             return result;
         }
 
+        /// <summary>
+        /// Creates and returns a <see cref="WebClient"/> to be used when communicating with Pushover's service.
+        /// </summary>
         private WebClient GetWebClient()
         {
             var wc = new WebClient();
@@ -723,6 +860,6 @@ namespace NPushover
             wc.Encoding = this.Encoding;
             return wc;
         }
-
+        #endregion
     }
 }

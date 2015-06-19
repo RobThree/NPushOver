@@ -43,7 +43,7 @@
         Desktop
     }
 
-    public enum SoundType
+    public enum AudioFormat
     {
         Mp3,
         Wav
