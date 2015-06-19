@@ -5,6 +5,7 @@ using NPushover.RequestObjects;
 using NPushover.ResponseObjects;
 using NPushover.Validators;
 using System;
+using System.Collections.Specialized;
 using System.IO;
 using System.Net;
 using System.Reflection;
@@ -92,13 +93,13 @@ namespace NPushover
             {
                 return await ExecuteWebRequest<PushoverUserResponse>(async () =>
                 {
-                    var parameters = new PushoverParams { 
+                    var parameters = new NameValueCollection { 
                         { "token", this.ApplicationToken }, 
                         { "user", userOrGroup },
-                        { "priority", (int)message.Priority },
                         { "message", message.Body }
                     };
 
+                    parameters.Add("priority", (int)message.Priority);
                     parameters.AddConditional("device", devices);
                     parameters.AddConditional("title", message.Title);
                     parameters.AddConditional("sound", message.Sound);
@@ -155,7 +156,7 @@ namespace NPushover
             {
                 return await ExecuteWebRequest<PushoverUserResponse>(async () =>
                 {
-                    var parameters = new PushoverParams { 
+                    var parameters = new NameValueCollection { 
                         { "token", this.ApplicationToken }
                     };
 
@@ -181,7 +182,7 @@ namespace NPushover
             {
                 return await ExecuteWebRequest<ValidateUserOrGroupResponse>(async () =>
                 {
-                    var parameters = new PushoverParams { 
+                    var parameters = new NameValueCollection { 
                         { "token", this.ApplicationToken }, 
                         { "user", userOrGroup }
                     };
@@ -213,7 +214,7 @@ namespace NPushover
             {
                 return await ExecuteWebRequest<MigrateSubscriptionResponse>(async () =>
                 {
-                    var parameters = new PushoverParams { 
+                    var parameters = new NameValueCollection { 
                         { "token", this.ApplicationToken }, 
                         { "subscription", subscription },
                         { "user", userOrGroup },
@@ -249,7 +250,7 @@ namespace NPushover
             {
                 return await ExecuteWebRequest<AssignLicenseResponse>(async () =>
                 {
-                    var parameters = new PushoverParams { 
+                    var parameters = new NameValueCollection { 
                         { "token", this.ApplicationToken }, 
                     };
                     parameters.AddConditional("user", user);
@@ -272,7 +273,7 @@ namespace NPushover
             {
                 return await ExecuteWebRequest<LoginResponse>(async () =>
                 {
-                    var parameters = new PushoverParams { 
+                    var parameters = new NameValueCollection { 
                         { "email", email }, 
                         { "password", password }, 
                     };
@@ -293,7 +294,7 @@ namespace NPushover
             {
                 return await ExecuteWebRequest<RegisterDeviceResponse>(async () =>
                 {
-                    var parameters = new PushoverParams { 
+                    var parameters = new NameValueCollection { 
                         { "secret", secret }, 
                         { "name", deviceName }, 
                         { "os", "O" }, //This is, currently, the only supported value ("Open Client")
@@ -341,10 +342,10 @@ namespace NPushover
             {
                 return await ExecuteWebRequest<PushoverUserResponse>(async () =>
                 {
-                    var parameters = new PushoverParams { 
+                    var parameters = new NameValueCollection { 
                         { "secret", secret }, 
-                        { "message", upToAndIncludingMessageId },
                     };
+                    parameters.Add("message", upToAndIncludingMessageId);
 
                     var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetV1APIUriFromBase("devices/{0}/update_highest_message.json", deviceId), parameters));
                     return await ParseResponse<PushoverUserResponse>(json, wc.ResponseHeaders);
@@ -362,7 +363,7 @@ namespace NPushover
             {
                 return await ExecuteWebRequest<PushoverUserResponse>(async () =>
                 {
-                    var parameters = new PushoverParams { 
+                    var parameters = new NameValueCollection { 
                         { "secret", secret }
                     };
 

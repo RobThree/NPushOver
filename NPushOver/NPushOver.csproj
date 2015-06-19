@@ -57,7 +57,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Pushover.cs" />
     <Compile Include="Exceptions\PushoverException.cs" />
-    <Compile Include="PushoverParams.cs" />
+    <Compile Include="NameValueCollectionExtensions.cs" />
     <Compile Include="Exceptions\ResponseException.cs" />
     <Compile Include="RequestObjects\RetryOptions.cs" />
     <Compile Include="RequestObjects\SupplementaryURL.cs" />
