@@ -49,9 +49,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NPushOver\NPushOver.csproj">
+    <ProjectReference Include="..\NPushOver\NPushover.csproj">
       <Project>{ed45aaa0-87aa-48d3-bce9-6eace9e3f19e}</Project>
-      <Name>NPushOver</Name>
+      <Name>NPushover</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

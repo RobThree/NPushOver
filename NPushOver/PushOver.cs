@@ -23,37 +23,111 @@ namespace NPushover
     {
         private static readonly string HOMEURL = "https://github.com/RobThree/NPushOver";
         private static readonly AssemblyName ASSEMBLYNAME = typeof(Pushover).Assembly.GetName();
-
-        public static readonly Uri DEFAULTBASEURI = new Uri("https://api.pushover.net/");
-        public static readonly Encoding DEFAULTENCODING = Encoding.UTF8;
-
         private static readonly DateTime EPOCH = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
+        /// <summary>
+        /// The default <see cref="Uri"/> used by Pushover.
+        /// </summary>
+        public static readonly Uri DEFAULTBASEURI = new Uri("https://api.pushover.net/");
+
+        /// <summary>
+        /// The default <see cref="Encoding"/> used by Pushover.
+        /// </summary>
+        public static readonly Encoding DEFAULTENCODING = Encoding.UTF8;
+
+        /// <summary>
+        /// Gets the encoding used for exchanging messages with Pushover.
+        /// </summary>
         public Encoding Encoding { get; private set; }
+
+        /// <summary>
+        /// Gets the base URL used by Pushover.
+        /// </summary>
         public Uri BaseUri { get; private set; }
-        public string ApplicationToken { get; private set; }
+
+        /// <summary>
+        /// Gets the application token used to identify to Pushover.
+        /// </summary>
+        public string ApplicationKey { get; private set; }
+
+        /// <summary>
+        /// Gets the <see cref="IRateLimiter"/> used by Pushover.
+        /// </summary>
         public IRateLimiter RateLimiter { get; private set; }
 
+        /// <summary>
+        /// Gets/sets the <see cref="IWebProxy"/> server used by Pushover.
+        /// </summary>
         public IWebProxy Proxy { get; set; }
+
+        /// <summary>
+        /// Gets/sets the <see cref="IValidator&lt;Message&gt;"/> used to validate messages before sending.
+        /// </summary>
         public IValidator<Message> MessageValidator { get; set; }
+        
+        /// <summary>
+        /// Gets/sets the <see cref="IValidator&lt;string&gt;"/> used to validate the Application Key.
+        /// </summary>
         public IValidator<string> AppKeyValidator { get; set; }
+        
+        /// <summary>
+        /// Gets/sets the <see cref="IValidator&lt;string&gt;"/> used to validate user or group keys.
+        /// </summary>
         public IValidator<string> UserOrGroupKeyValidator { get; set; }
+
+        /// <summary>
+        /// Gets/sets the <see cref="IValidator&lt;string&gt;"/> used to validate devicenames.
+        /// </summary>
         public IValidator<string> DeviceNameValidator { get; set; }
+
+        /// <summary>
+        /// Gets/sets the <see cref="IValidator&lt;string&gt;"/> used to receipts.
+        /// </summary>
         public IValidator<string> ReceiptValidator { get; set; }
+
+        /// <summary>
+        /// Gets/sets the <see cref="IValidator&lt;string&gt;"/> used to validate e-mail addresses.
+        /// </summary>
         public IValidator<string> EmailValidator { get; set; }
 
-        public Pushover(string applicationToken)
-            : this(applicationToken, DEFAULTBASEURI) { }
+        /// <summary>
+        /// Initializes a new instance of <see cref="Pushover"/> with the specified applicationkey, the 
+        /// <see cref="DEFAULTBASEURI"/>, no <see cref="IRateLimiter"/> and <see cref="DEFAULTENCODING"/>.
+        /// </summary>
+        /// <param name="applicationKey">The application key (or token).</param>
+        public Pushover(string applicationKey)
+            : this(applicationKey, DEFAULTBASEURI) { }
 
-        public Pushover(string applicationToken, Uri baseUri)
-            : this(applicationToken, baseUri, new NullRateLimiter()) { }
+        /// <summary>
+        /// Initializes a new instance of <see cref="Pushover"/> with the specified applicationkey and base URI, no 
+        /// <see cref="IRateLimiter"/> and <see cref="DEFAULTENCODING"/>.
+        /// </summary>
+        /// <param name="applicationKey">The application key (or token).</param>
+        /// <param name="baseUri">The base <see cref="Uri"/> to use. Note that this does not include the API version (e.g. 1).</param>
+        public Pushover(string applicationKey, Uri baseUri)
+            : this(applicationKey, baseUri, new NullRateLimiter()) { }
 
-        public Pushover(string applicationToken, Uri baseUri, IRateLimiter rateLimiter)
-            : this(applicationToken, baseUri, rateLimiter, DEFAULTENCODING) { }
+        /// <summary>
+        /// Initializes a new instance of <see cref="Pushover"/> with the specified applicationkey, base URI and 
+        /// <see cref="IRateLimiter"/> and <see cref="DEFAULTENCODING"/>.
+        /// </summary>
+        /// <param name="applicationKey">The application key (or token).</param>
+        /// <param name="baseUri">The base <see cref="Uri"/> to use. Note that this does not include the API version (e.g. 1).</param>
+        /// <param name="rateLimiter">The <see cref="IRateLimiter"/> to use.</param>
+        public Pushover(string applicationKey, Uri baseUri, IRateLimiter rateLimiter)
+            : this(applicationKey, baseUri, rateLimiter, DEFAULTENCODING) { }
 
-        public Pushover(string applicationToken, Uri baseUri, IRateLimiter rateLimiter, Encoding encoding)
+        /// <summary>
+        /// Initializes a new instance of <see cref="Pushover"/> with the specified applicationkey, base URI, 
+        /// <see cref="IRateLimiter"/> and <see cref="Encoding"/>.
+        /// </summary>
+        /// <param name="applicationKey">The application key (or token).</param>
+        /// <param name="baseUri">The base <see cref="Uri"/> to use. Note that this does not include the API version (e.g. 1).</param>
+        /// <param name="rateLimiter">The <see cref="IRateLimiter"/> to use.</param>
+        /// <param name="encoding">The <see cref="Encoding"/> to use for exchaning data with Pushover.</param>
+        public Pushover(string applicationKey, Uri baseUri, IRateLimiter rateLimiter, Encoding encoding)
         {
-            (this.AppKeyValidator ?? new ApplicationKeyValidator()).Validate("applicationToken", applicationToken);
+            (this.AppKeyValidator ?? new ApplicationKeyValidator()).Validate("applicationKey", applicationKey);
             if (baseUri == null)
                 throw new ArgumentNullException("baseUri");
             if (rateLimiter == null)
@@ -61,29 +135,51 @@ namespace NPushover
             if (encoding == null)
                 throw new ArgumentNullException("encoding");
 
-            this.ApplicationToken = applicationToken;
+            this.ApplicationKey = applicationKey;
             this.BaseUri = baseUri;
             this.RateLimiter = rateLimiter;
             this.Encoding = encoding;
         }
 
+        /// <summary>
+        /// Sends, asynchronously, the specified <see cref="Message"/> using Pushover to the specified user or group.
+        /// </summary>
+        /// <param name="message">The <see cref="Message"/> to send.</param>
+        /// <param name="userOrGroup">The user or group id to send the message to.</param>
+        /// <returns>Returns the <see cref="PushoverUserResponse"/> returned by the server.</returns>
         public async Task<PushoverUserResponse> SendMessageAsync(Message message, string userOrGroup)
         {
             return await this.SendMessageAsync(message, userOrGroup, (string[])null);
         }
 
-        public async Task<PushoverUserResponse> SendMessageAsync(Message message, string userOrGroup, string device)
+        /// <summary>
+        /// Sends, asynchronously, the specified <see cref="Message"/> using Pushover to the specified device of the
+        /// specified user or group.
+        /// </summary>
+        /// <param name="message">The <see cref="Message"/> to send.</param>
+        /// <param name="userOrGroup">The user or group id to send the message to.</param>
+        /// <param name="deviceName">The devicename to send the message to.</param>
+        /// <returns>Returns the <see cref="PushoverUserResponse"/> returned by the server.</returns>
+        public async Task<PushoverUserResponse> SendMessageAsync(Message message, string userOrGroup, string deviceName)
         {
-            return await this.SendMessageAsync(message, userOrGroup, new[] { device });
+            return await this.SendMessageAsync(message, userOrGroup, new[] { deviceName });
         }
 
-        public async Task<PushoverUserResponse> SendMessageAsync(Message message, string userOrGroup, string[] devices)
+        /// <summary>
+        /// Sends, asynchronously, the specified <see cref="Message"/> using Pushover to the specified device(s) of the
+        /// specified user or group.
+        /// </summary>
+        /// <param name="message">The <see cref="Message"/> to send.</param>
+        /// <param name="userOrGroup">The user or group id to send the message to.</param>
+        /// <param name="deviceNames">The devicenames to send the message to.</param>
+        /// <returns>Returns the <see cref="PushoverUserResponse"/> returned by the server.</returns>
+        public async Task<PushoverUserResponse> SendMessageAsync(Message message, string userOrGroup, string[] deviceNames)
         {
             (this.MessageValidator ?? new DefaultMessageValidator()).Validate("message", message);
             (this.UserOrGroupKeyValidator ?? new UserOrGroupKeyValidator()).Validate("userOrGroup", userOrGroup);
-            if (devices != null && devices.Length > 0)
+            if (deviceNames != null && deviceNames.Length > 0)
             {
-                foreach (var device in devices)
+                foreach (var device in deviceNames)
                 {
                     (this.DeviceNameValidator ?? new DeviceNameValidator()).Validate("device", device);
                 }
@@ -94,13 +190,13 @@ namespace NPushover
                 return await ExecuteWebRequest<PushoverUserResponse>(async () =>
                 {
                     var parameters = new NameValueCollection { 
-                        { "token", this.ApplicationToken }, 
+                        { "token", this.ApplicationKey }, 
                         { "user", userOrGroup },
                         { "message", message.Body }
                     };
 
                     parameters.Add("priority", (int)message.Priority);
-                    parameters.AddConditional("device", devices);
+                    parameters.AddConditional("device", deviceNames);
                     parameters.AddConditional("title", message.Title);
                     parameters.AddConditional("sound", message.Sound);
                     parameters.AddConditional("html", message.IsHtmlBody);
@@ -130,7 +226,7 @@ namespace NPushover
             {
                 return await ExecuteWebRequest<SoundsResponse>(async () =>
                 {
-                    var json = await wc.DownloadStringTaskAsync(GetV1APIUriFromBase("sounds.json?token={0}", this.ApplicationToken));
+                    var json = await wc.DownloadStringTaskAsync(GetV1APIUriFromBase("sounds.json?token={0}", this.ApplicationKey));
                     return await ParseResponse<SoundsResponse>(json, wc.ResponseHeaders);
                 });
             }
@@ -143,7 +239,7 @@ namespace NPushover
             {
                 return await ExecuteWebRequest<ReceiptResponse>(async () =>
                 {
-                    var json = await wc.DownloadStringTaskAsync(GetV1APIUriFromBase("receipts/{0}.json?token={1}", receipt, this.ApplicationToken));
+                    var json = await wc.DownloadStringTaskAsync(GetV1APIUriFromBase("receipts/{0}.json?token={1}", receipt, this.ApplicationKey));
                     return await ParseResponse<ReceiptResponse>(json, wc.ResponseHeaders);
                 });
             }
@@ -157,7 +253,7 @@ namespace NPushover
                 return await ExecuteWebRequest<PushoverUserResponse>(async () =>
                 {
                     var parameters = new NameValueCollection { 
-                        { "token", this.ApplicationToken }
+                        { "token", this.ApplicationKey }
                     };
 
                     var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(GetV1APIUriFromBase("receipts/{0}/cancel.json", receipt), parameters));
@@ -183,7 +279,7 @@ namespace NPushover
                 return await ExecuteWebRequest<ValidateUserOrGroupResponse>(async () =>
                 {
                     var parameters = new NameValueCollection { 
-                        { "token", this.ApplicationToken }, 
+                        { "token", this.ApplicationKey }, 
                         { "user", userOrGroup }
                     };
                     parameters.AddConditional("device", device);
@@ -215,7 +311,7 @@ namespace NPushover
                 return await ExecuteWebRequest<MigrateSubscriptionResponse>(async () =>
                 {
                     var parameters = new NameValueCollection { 
-                        { "token", this.ApplicationToken }, 
+                        { "token", this.ApplicationKey }, 
                         { "subscription", subscription },
                         { "user", userOrGroup },
                     };
@@ -251,7 +347,7 @@ namespace NPushover
                 return await ExecuteWebRequest<AssignLicenseResponse>(async () =>
                 {
                     var parameters = new NameValueCollection { 
-                        { "token", this.ApplicationToken }, 
+                        { "token", this.ApplicationKey }, 
                     };
                     parameters.AddConditional("user", user);
                     parameters.AddConditional("email", email);
