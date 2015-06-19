@@ -30,6 +30,20 @@
       <DocumentationSource sourceFile="..\NPushOver\bin\Release\NPushOver.dll" xmlns="" />
       <DocumentationSource sourceFile="..\NPushOver\bin\Release\NPushOver.xml" xmlns="" />
     </DocumentationSources>
+    <MaximumGroupParts>2</MaximumGroupParts>
+    <NamespaceGrouping>True</NamespaceGrouping>
+    <SyntaxFilters>Standard</SyntaxFilters>
+    <SdkLinkTarget>Blank</SdkLinkTarget>
+    <RootNamespaceContainer>False</RootNamespaceContainer>
+    <PresentationStyle>VS2013</PresentationStyle>
+    <Preliminary>False</Preliminary>
+    <NamingMethod>Guid</NamingMethod>
+    <HelpTitle>NPushover library documentation</HelpTitle>
+    <FeedbackEMailLinkText>Rob Janssen</FeedbackEMailLinkText>
+    <FeedbackEMailAddress>rob%40robiii.me</FeedbackEMailAddress>
+    <CopyrightText>%28c%29 2015 Rob Janssen</CopyrightText>
+    <CopyrightHref>http://robiii.me</CopyrightHref>
+    <ContentPlacement>AboveNamespaces</ContentPlacement>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in order for Visual Studio to perform
 			 the build.  The others are optional common platform types that may appear. -->
