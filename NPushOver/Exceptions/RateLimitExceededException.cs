@@ -8,8 +8,7 @@ namespace NPushover.Exceptions
     /// </summary>
     /// <remarks>
     /// Exceptions of this type are caused by the Pushover service; an <see cref="NPushover.Ratelimiters.IRateLimiter"/>
-    /// can be used to (try to)
-    /// prevent these exceptions from happening.
+    /// can be used to (try to) prevent these exceptions from happening.
     /// </remarks>
     public class RateLimitExceededException : ResponseException
     {

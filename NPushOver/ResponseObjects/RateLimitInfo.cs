@@ -2,13 +2,40 @@
 
 namespace NPushover.ResponseObjects
 {
+    /// <summary>
+    /// Represents rate limiting info returned by the Pushover services (if any).
+    /// </summary>
+    /// <remarks>
+    /// Note that this information comes from the Pushover services; this is not related to the
+    /// <see cref="NPushover.Ratelimiters.IRateLimiter"/> that can be used to rate-limit the usage client-side.
+    /// </remarks>
+    /// <seealso cref="NPushover.Ratelimiters.IRateLimiter"/> 
+    /// <seealso cref="NPushover.Exceptions.RateLimitExceededException"/>
+    /// <seealso href="https://pushover.net/api#limits">Pushover API documentation</seealso>
     public class RateLimitInfo
     {
+        /// <summary>
+        /// Gets the monthly message limit (plus any additional purchased capacity).
+        /// </summary>
+        /// <seealso href="https://pushover.net/api#limits">Pushover API documentation</seealso>
         public int Limit { get; private set; }
+        
+        /// <summary>
+        /// Gets the remaining monthly message limit (plus any additional purchased capacity).
+        /// </summary>
+        /// <seealso href="https://pushover.net/api#limits">Pushover API documentation</seealso>
         public int Remaining { get; private set; }
+
+        /// <summary>
+        /// Gets the date when the count for the rate limit will be rest.
+        /// </summary>
+        /// <seealso href="https://pushover.net/api#limits">Pushover API documentation</seealso>
         public DateTime Reset { get; private set; }
 
-        public RateLimitInfo(int limit, int remaining, DateTime reset)
+        /// <summary>
+        /// Initializes a new <see cref="RateLimitInfo"/> object.
+        /// </summary>
+        internal RateLimitInfo(int limit, int remaining, DateTime reset)
         {
             this.Limit = limit;
             this.Remaining = remaining;

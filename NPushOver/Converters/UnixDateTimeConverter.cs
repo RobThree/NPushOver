@@ -92,6 +92,8 @@ namespace NPushover.Converters
         {
             if (reader.Value == null)
                 return null;
+            if ((reader.TokenType == JsonToken.Integer) && ((long)reader.Value == 0))
+                return null;
             return base.ReadJson(reader, objectType, existingValue, serializer);
         }
 

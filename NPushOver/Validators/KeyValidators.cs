@@ -44,8 +44,8 @@ namespace NPushover.Validators
         {
             if (value == null)
                 throw new ArgumentNullException(paramName);
-            if (!this.Regex.IsMatch(value))
-                throw new InvalidKeyException(paramName, value);
+            //if (!this.Regex.IsMatch(value))
+            //    throw new InvalidKeyException(paramName, value);
         }
     }
 
