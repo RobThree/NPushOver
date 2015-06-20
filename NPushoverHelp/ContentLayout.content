@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Topics>
-  <Topic id="099b6407-c379-44eb-b30b-3a55e9efe838" visible="True" isDefault="true" isSelected="true" title="Welcome to the [TODO: Add project name]">
+  <Topic id="099b6407-c379-44eb-b30b-3a55e9efe838" visible="True" isDefault="true" isSelected="true" title="Welcome to NPushover">
     <HelpKeywords>
       <HelpKeyword index="K" term="Welcome" />
     </HelpKeywords>
@@ -9,9 +9,9 @@
     <HelpKeywords>
       <HelpKeyword index="K" term="version, history" />
     </HelpKeywords>
-    <Topic id="02491d4f-72d6-441e-842b-4e976cb8d36e" visible="True" title="Version 1.0.0.0">
+    <Topic id="02491d4f-72d6-441e-842b-4e976cb8d36e" visible="True" title="Version 1.0">
       <HelpKeywords>
-        <HelpKeyword index="K" term="version, 1.0.0.0" />
+        <HelpKeyword index="K" term="version, 1.0" />
       </HelpKeywords>
     </Topic>
   </Topic>

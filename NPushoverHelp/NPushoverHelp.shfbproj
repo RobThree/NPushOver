@@ -18,13 +18,13 @@
     <HtmlHelpName>NPushoverHelp</HtmlHelpName>
     <Language>en-US</Language>
     <TransformComponentArguments>
-      <Argument Key="logoFile" Value="..\Logo\logo_48.png" xmlns="" />
-      <Argument Key="logoHeight" Value="" xmlns="" />
-      <Argument Key="logoWidth" Value="" xmlns="" />
-      <Argument Key="logoAltText" Value="" xmlns="" />
+      <Argument Key="logoFile" Value="Help.png" xmlns="" />
+      <Argument Key="logoHeight" Value="48" xmlns="" />
+      <Argument Key="logoWidth" Value="48" xmlns="" />
+      <Argument Key="logoAltText" Value="NPushover Logo" xmlns="" />
       <Argument Key="logoPlacement" Value="left" xmlns="" />
       <Argument Key="logoAlignment" Value="left" xmlns="" />
-      <Argument Key="maxVersionParts" Value="" xmlns="" />
+      <Argument Key="maxVersionParts" Value="2" xmlns="" />
     </TransformComponentArguments>
     <DocumentationSources>
       <DocumentationSource sourceFile="..\NPushOver\bin\Release\NPushOver.dll" xmlns="" />
