@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using NPushover.Exceptions;
-using NPushover.Ratelimiters;
 using NPushover.RequestObjects;
 using NPushover.ResponseObjects;
 using NPushover.Validators;
@@ -17,7 +16,6 @@ namespace NPushover
 {
     // NOTE: This library is not written or supported by Superblock (the creators of Pushover).
 
-    // TODO: Extend with a rate-limiter
     // TODO: Implement OpenClient API realtime notifications? https://pushover.net/api/client
 
     /// <summary>
@@ -59,11 +57,6 @@ namespace NPushover
         public string ApplicationKey { get; private set; }
 
         /// <summary>
-        /// Gets the <see cref="IRateLimiter"/> used by Pushover.
-        /// </summary>
-        public IRateLimiter RateLimiter { get; private set; }
-
-        /// <summary>
         /// Gets/sets the <see cref="IWebProxy"/> server used by Pushover.
         /// </summary>
         public IWebProxy Proxy { get; set; }
@@ -102,7 +95,7 @@ namespace NPushover
         #region Constructors
         /// <summary>
         /// Initializes a new instance of <see cref="Pushover"/> with the specified applicationkey, the 
-        /// <see cref="DEFAULTBASEURI"/>, no <see cref="IRateLimiter"/> and <see cref="DEFAULTENCODING"/>.
+        /// <see cref="DEFAULTBASEURI"/> and <see cref="DEFAULTENCODING"/>.
         /// </summary>
         /// <param name="applicationKey">The application key (or token).</param>
         /// <seealso href="https://pushover.net/api">Pushover API documentation</seealso>
@@ -112,8 +105,8 @@ namespace NPushover
             : this(applicationKey, DEFAULTBASEURI) { }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="Pushover"/> with the specified applicationkey and base URI, no 
-        /// <see cref="IRateLimiter"/> and <see cref="DEFAULTENCODING"/>.
+        /// Initializes a new instance of <see cref="Pushover"/> with the specified applicationkey and base URI and 
+        /// <see cref="DEFAULTENCODING"/>.
         /// </summary>
         /// <param name="applicationKey">The application key (or token).</param>
         /// <param name="baseUri">The base <see cref="Uri"/> to use. Note that this does not include the API version (e.g. 1).</param>
@@ -121,45 +114,27 @@ namespace NPushover
         /// <exception cref="ArgumentNullException">Thrown when applicationKey or baseUri are null.</exception>
         /// <exception cref="InvalidKeyException">Thrown when an invalid applicationKey is specified.</exception>
         public Pushover(string applicationKey, Uri baseUri)
-            : this(applicationKey, baseUri, new NullRateLimiter()) { }
+            : this(applicationKey, baseUri, DEFAULTENCODING) { }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="Pushover"/> with the specified applicationkey, base URI and 
-        /// <see cref="IRateLimiter"/> and <see cref="DEFAULTENCODING"/>.
+        /// Initializes a new instance of <see cref="Pushover"/> with the specified applicationkey, base URI and <see cref="Encoding"/>.
         /// </summary>
         /// <param name="applicationKey">The application key (or token).</param>
         /// <param name="baseUri">The base <see cref="Uri"/> to use. Note that this does not include the API version (e.g. 1).</param>
-        /// <param name="rateLimiter">The <see cref="IRateLimiter"/> to use.</param>
-        /// <seealso href="https://pushover.net/api">Pushover API documentation</seealso>
-        /// <exception cref="ArgumentNullException">Thrown when applicationKey, baseUri or rateLimiter are null.</exception>
-        /// <exception cref="InvalidKeyException">Thrown when an invalid applicationKey is specified.</exception>
-        public Pushover(string applicationKey, Uri baseUri, IRateLimiter rateLimiter)
-            : this(applicationKey, baseUri, rateLimiter, DEFAULTENCODING) { }
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="Pushover"/> with the specified applicationkey, base URI, 
-        /// <see cref="IRateLimiter"/> and <see cref="Encoding"/>.
-        /// </summary>
-        /// <param name="applicationKey">The application key (or token).</param>
-        /// <param name="baseUri">The base <see cref="Uri"/> to use. Note that this does not include the API version (e.g. 1).</param>
-        /// <param name="rateLimiter">The <see cref="IRateLimiter"/> to use.</param>
         /// <param name="encoding">The <see cref="Encoding"/> to use for exchaning data with Pushover.</param>
         /// <seealso href="https://pushover.net/api">Pushover API documentation</seealso>
-        /// <exception cref="ArgumentNullException">Thrown when applicationKey, baseUri, rateLimiter or Encoding are null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when applicationKey, baseUri or Encoding are null.</exception>
         /// <exception cref="InvalidKeyException">Thrown when an invalid applicationKey is specified.</exception>
-        public Pushover(string applicationKey, Uri baseUri, IRateLimiter rateLimiter, Encoding encoding)
+        public Pushover(string applicationKey, Uri baseUri, Encoding encoding)
         {
             (this.AppKeyValidator ?? new ApplicationKeyValidator()).Validate("applicationKey", applicationKey);
             if (baseUri == null)
                 throw new ArgumentNullException("baseUri");
-            if (rateLimiter == null)
-                throw new ArgumentNullException("rateLimiter");
             if (encoding == null)
                 throw new ArgumentNullException("encoding");
 
             this.ApplicationKey = applicationKey;
             this.BaseUri = baseUri;
-            this.RateLimiter = rateLimiter;
             this.Encoding = encoding;
         }
         #endregion
@@ -722,7 +697,6 @@ namespace NPushover
         {
             try
             {
-                //TODO: Use this.RateLimiter here somewhere?
                 return await func.Invoke();
             }
             catch (WebException wex)

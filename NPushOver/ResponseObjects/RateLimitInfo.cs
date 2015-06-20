@@ -5,11 +5,6 @@ namespace NPushover.ResponseObjects
     /// <summary>
     /// Represents rate limiting info returned by the Pushover services (if any).
     /// </summary>
-    /// <remarks>
-    /// Note that this information comes from the Pushover services; this is not related to the
-    /// <see cref="NPushover.Ratelimiters.IRateLimiter"/> that can be used to rate-limit the usage client-side.
-    /// </remarks>
-    /// <seealso cref="NPushover.Ratelimiters.IRateLimiter"/> 
     /// <seealso cref="NPushover.Exceptions.RateLimitExceededException"/>
     /// <seealso href="https://pushover.net/api#limits">Pushover API documentation</seealso>
     public class RateLimitInfo

@@ -7,8 +7,7 @@ namespace NPushover.Exceptions
     /// Represents an error that occurs when the Pushover service returns a "rate limit exceeded" response.
     /// </summary>
     /// <remarks>
-    /// Exceptions of this type are caused by the Pushover service; an <see cref="NPushover.Ratelimiters.IRateLimiter"/>
-    /// can be used to (try to) prevent these exceptions from happening.
+    /// Exceptions of this type are caused by the Pushover service.
     /// </remarks>
     public class RateLimitExceededException : ResponseException
     {
