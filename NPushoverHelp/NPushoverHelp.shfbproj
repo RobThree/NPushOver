@@ -18,7 +18,7 @@
     <HtmlHelpName>NPushoverHelp</HtmlHelpName>
     <Language>en-US</Language>
     <TransformComponentArguments>
-      <Argument Key="logoFile" Value="Help.png" xmlns="" />
+      <Argument Key="logoFile" Value="..\Logo\logo_48.png" xmlns="" />
       <Argument Key="logoHeight" Value="" xmlns="" />
       <Argument Key="logoWidth" Value="" xmlns="" />
       <Argument Key="logoAltText" Value="" xmlns="" />
