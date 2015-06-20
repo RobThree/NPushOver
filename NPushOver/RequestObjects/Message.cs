@@ -48,7 +48,7 @@ namespace NPushover.RequestObjects
         /// <summary>
         /// Gets/sets the notification sound for the <see cref="Message"/>.
         /// </summary>
-        /// <remarks>A list of available sounds can be retrieved with <see cref="Pushover.ListSoundsAsync"/>.</remarks>
+        /// <remarks>A list of available sounds can be retrieved with <see cref="M:NPushover.Pushover.ListSoundsAsync"/>.</remarks>
         /// <seealso cref="Sounds"/>
         /// <seealso href="https://pushover.net/api#sounds">Pushover API documentation</seealso>
         public string Sound { get; set; }

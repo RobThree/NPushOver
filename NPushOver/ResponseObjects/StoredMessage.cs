@@ -8,7 +8,7 @@ namespace NPushover.ResponseObjects
 {
     /// <summary>
     /// Represents information about a <see cref="ListMessagesResponse"/> message for a 
-    /// <see cref="M:NPushover.Pushover.ListMessagesAsync"/> call.
+    /// <see cref="M:NPushover.Pushover.ListMessagesAsync(System.String,System.String)"/> call.
     /// </summary>
     /// <seealso href="https://pushover.net/api/client#download">Pushover API documentation</seealso>
     public class StoredMessage
@@ -65,10 +65,10 @@ namespace NPushover.ResponseObjects
         /// Gets the icon filename of the application that sent the <see cref="Message"/>.
         /// </summary>
         /// <remarks>
-        /// The image data can be fetched using <see cref="M:NPushover.Pushover.DownloadIconAsync"/>. When an
+        /// The image data can be fetched using <see cref="M:NPushover.Pushover.DownloadIconAsync(System.String)"/>. When an
         /// application changes its icon, this value will change.
         /// </remarks>
-        /// <seealso cref="M:NPushover.Pushover.DownloadIconAsync"/>
+        /// <seealso cref="M:NPushover.Pushover.DownloadIconAsync(System.String)"/>
         /// <seealso href="https://pushover.net/api/client#download">Pushover API documentation</seealso>
         [JsonProperty("icon")]
         public string Icon { get; set; }
@@ -96,7 +96,7 @@ namespace NPushover.ResponseObjects
         /// <remarks>
         /// This resource should be downloaded and cached.
         /// </remarks>
-        /// <seealso cref="M:NPushover.Pushover.DownloadSoundAsync"/>
+        /// <seealso cref="O:NPushover.Pushover.DownloadSoundAsync"/>
         /// <seealso href="https://pushover.net/api/client#download">Pushover API documentation</seealso>
         [JsonProperty("sound")]
         public string Sound { get; set; }

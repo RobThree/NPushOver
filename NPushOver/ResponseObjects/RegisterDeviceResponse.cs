@@ -3,7 +3,7 @@
 namespace NPushover.ResponseObjects
 {
     /// <summary>
-    /// Represents a response for a <see cref="M:NPushover.Pushover.RegisterDeviceAsync"/> call.
+    /// Represents a response for a <see cref="M:NPushover.Pushover.RegisterDeviceAsync(System.String,System.String)"/> call.
     /// </summary>
     /// <seealso href="https://pushover.net/api/client#register">Pushover API documentation</seealso>
     public class RegisterDeviceResponse : PushoverUserResponse

@@ -3,7 +3,7 @@
 namespace NPushover.ResponseObjects
 {
     /// <summary>
-    /// Represents a response for a <see cref="M:NPushover.Pushover.ListMessagesAsync"/> call.
+    /// Represents a response for a <see cref="M:NPushover.Pushover.ListMessagesAsync(System.String,System.String)"/> call.
     /// </summary>
     /// <seealso href="https://pushover.net/api/client#download">Pushover API documentation</seealso>
     public class ListMessagesResponse : PushoverResponse

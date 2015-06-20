@@ -3,7 +3,7 @@
 namespace NPushover.ResponseObjects
 {
     /// <summary>
-    /// Represents a response for a <see cref="M:NPushover.Pushover.ValidateUserOrGroupAsync"/> call.
+    /// Represents a response for a <see cref="O:NPushover.Pushover.ValidateUserOrGroupAsync"/> call.
     /// </summary>
     /// <seealso href="https://pushover.net/api#verification">Pushover API documentation</seealso>
     public class ValidateUserOrGroupResponse : PushoverUserResponse

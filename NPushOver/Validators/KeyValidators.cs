@@ -12,7 +12,7 @@ namespace NPushover.Validators
         /// <summary>
         /// Gets the Regex for the validator.
         /// </summary>
-        protected Regex Regex { get; private set; }
+        protected Regex ValidationRegex { get; private set; }
 
         /// <summary>
         /// Default options for most <see cref="Regex"/> objects.
@@ -29,7 +29,7 @@ namespace NPushover.Validators
             if (regex == null)
                 throw new ArgumentNullException("regex");
 
-            this.Regex = regex;
+            this.ValidationRegex = regex;
         }
 
         /// <summary>
@@ -37,15 +37,17 @@ namespace NPushover.Validators
         /// </summary>
         /// <param name="paramName">The name of the parameter being validated.</param>
         /// <param name="value">The value to validate/match.</param>
-        /// <remarks>This method uses the <see cref="Regex"/>'s <see cref="M:Regex.IsMatch(System.String)"/> method.</remarks>
+        /// <remarks>
+        /// This method uses the <see cref="Regex"/>'s <see cref="Regex.IsMatch(System.String)"/> method.
+        /// </remarks>
         /// <exception cref="ArgumentNullException">Thrown when value is null.</exception>
         /// <exception cref="InvalidKeyException">Thrown when value does not match the validator's <see cref="Regex"/>.</exception>
         public void Validate(string paramName, string value)
         {
             if (value == null)
                 throw new ArgumentNullException(paramName);
-            //if (!this.Regex.IsMatch(value))
-            //    throw new InvalidKeyException(paramName, value);
+            if (!this.ValidationRegex.IsMatch(value))
+                throw new InvalidKeyException(paramName, value);
         }
     }
 

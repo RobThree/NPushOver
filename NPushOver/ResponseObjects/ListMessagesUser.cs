@@ -4,7 +4,7 @@ namespace NPushover.ResponseObjects
 {
     /// <summary>
     /// Represents information about a user which is part of the response from a <see cref="ListMessagesResponse"/> from
-    /// a <see cref="M:NPushover.Pushover.ListMessagesAsync"/> call.
+    /// a <see cref="M:NPushover.Pushover.ListMessagesAsync(System.String,System.String)"/> call.
     /// </summary>
     /// <remarks>
     /// This part of the response is undocumented by Pushover.

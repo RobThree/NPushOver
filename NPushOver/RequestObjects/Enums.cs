@@ -1,7 +1,7 @@
 ﻿namespace NPushover.RequestObjects
 {
     /// <summary>
-    /// Defines the available priorities for <see cref="Message"/>s.
+    /// Defines the available priorities for <see cref="NPushover.RequestObjects.Message"/>s.
     /// </summary>
     public enum Priority
     {
@@ -49,7 +49,7 @@
     }
 
     /// <summary>
-    /// Defines the available sounds (however, more sounds may become available; see <see cref="M:Pushover.ListSoundsAsync()"/>).
+    /// Defines the available sounds (however, more sounds may become available; see <see cref="M:NPushover.Pushover.ListSoundsAsync"/>).
     /// </summary>
     public enum Sounds
     {
@@ -122,7 +122,7 @@
 
     /// <summary>
     /// Defines the available Operating System choices for licensing (see 
-    /// <see cref="M:Pushover.AssigLicenseAsync(System.String,System.String)"/>).
+    /// <see cref="O:NPushover.Pushover.AssignLicenseAsync"/>).
     /// </summary>
     public enum OS
     {
@@ -140,7 +140,7 @@
     }
 
     /// <summary>
-    /// Defines the available audio formats for retrieval (see <see cref="M:Pushover.DownloadSoundAsync(System.String,AudioFormat)"/>).
+    /// Defines the available audio formats for retrieval (see <see cref="O:NPushover.Pushover.DownloadSoundAsync"/>).
     /// </summary>
     public enum AudioFormat
     {

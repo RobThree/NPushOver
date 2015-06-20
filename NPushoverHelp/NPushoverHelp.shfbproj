@@ -44,6 +44,15 @@
     <CopyrightText>%28c%29 2015 Rob Janssen</CopyrightText>
     <CopyrightHref>http://robiii.me</CopyrightHref>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
+    <NamespaceSummaries>
+      <NamespaceSummaryItem name="NPushover" isDocumented="True" xmlns="">Contains classes to interact with the Pushover services.</NamespaceSummaryItem>
+<NamespaceSummaryItem name="NPushover.Exceptions" isDocumented="True" xmlns="">Contains exception classes thet are thrown by NPushover.</NamespaceSummaryItem>
+<NamespaceSummaryItem name="NPushover.Ratelimiters" isDocumented="True" xmlns="">Contains interfaces and classes that are used for (client-side) rate limiting.</NamespaceSummaryItem>
+<NamespaceSummaryItem name="NPushover.RequestObjects" isDocumented="True" xmlns="">Contains classes that are used in requests to the Pushover services.</NamespaceSummaryItem>
+<NamespaceSummaryItem name="NPushover.ResponseObjects" isDocumented="True" xmlns="">Contains classes that are used when handling responses from the Pushover services.</NamespaceSummaryItem>
+<NamespaceSummaryItem name="NPushover.Validators" isDocumented="True" xmlns="">Contains classes that are used to validate objects before sending them to the Pushover services.</NamespaceSummaryItem></NamespaceSummaries>
+    <ProjectSummary>&amp;lt%3bpara&amp;gt%3bThis library contains a set of classes and interfaces to interact with the Pushover servcies from &amp;lt%3ba href=&amp;quot%3bhttps://pushover.net&amp;quot%3b&amp;gt%3bPushover.net&amp;lt%3b/a&amp;gt%3b.&amp;lt%3b/para&amp;gt%3b
+&amp;lt%3bpara&amp;gt%3bPushover is a trademark and product of &amp;lt%3ba href=&amp;quot%3bhttp://superblock.net/&amp;quot%3b&amp;gt%3bSuperblock, LLC&amp;lt%3b/a&amp;gt%3b. This library is not written nor supported by Superblock.&amp;lt%3b/para&amp;gt%3b</ProjectSummary>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in order for Visual Studio to perform
 			 the build.  The others are optional common platform types that may appear. -->

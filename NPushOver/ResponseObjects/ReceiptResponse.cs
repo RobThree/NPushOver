@@ -5,7 +5,7 @@ using System;
 namespace NPushover.ResponseObjects
 {
     /// <summary>
-    /// Represents a response for a <see cref="M:NPushover.Pushover.GetReceiptAsync"/> call.
+    /// Represents a response for a <see cref="M:NPushover.Pushover.GetReceiptAsync(System.String)"/> call.
     /// </summary>
     /// <seealso href="https://pushover.net/api#receipt">Pushover API documentation</seealso>
     public class ReceiptResponse : PushoverUserResponse
