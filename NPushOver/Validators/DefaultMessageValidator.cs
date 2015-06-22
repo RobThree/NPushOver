@@ -49,7 +49,11 @@ namespace NPushover.Validators
 
                 if (message.RetryOptions.RetryEvery < MINRETRYEVERY)
                     throw new ArgumentOutOfRangeException("retryOptions.retryEvery");
+                if (message.RetryOptions.RetryEvery > MAXRETRYPERIOD)
+                    throw new ArgumentOutOfRangeException("retryOptions.retryEvery");
                 if (message.RetryOptions.RetryPeriod > MAXRETRYPERIOD)
+                    throw new ArgumentOutOfRangeException("retryOptions.retryPeriod");
+                if (message.RetryOptions.RetryPeriod < TimeSpan.Zero)
                     throw new ArgumentOutOfRangeException("retryOptions.retryPeriod");
             }
             else

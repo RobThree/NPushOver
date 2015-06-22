@@ -76,6 +76,16 @@ namespace NPushover.RequestObjects
         public RetryOptions RetryOptions { get; set; }
 
         /// <summary>
+        /// Creates a <see cref="Message"/> with the specified <see cref="Body"/> and default <see cref="Priority"/> (Normal) and sound.
+        /// </summary>
+        /// <param name="body">The <see cref="Message"/> <see cref="Body"/>.</param>
+        /// <returns>A <see cref="Message"/> with the specified <see cref="Body"/> and default <see cref="Priority"/> (Normal) and sound.</returns>
+        public static Message Create(string body)
+        {
+            return Create(Priority.Normal, body, Sounds.Pushover);
+        }
+
+        /// <summary>
         /// Creates a <see cref="Message"/> with the specified <see cref="Priority"/> and <see cref="Body"/> and default sound.
         /// </summary>
         /// <param name="priority">The <see cref="Message"/> <see cref="Priority"/>.</param>
