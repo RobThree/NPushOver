@@ -64,4 +64,4 @@ NPushover is well documented in code, comes with a helpfile (or [Sandcastle help
 
 As more and more [unittests](https://github.com/RobThree/NPushOver/tree/master/NPushover.Tests) are created, usage of specifics should be found easily in those unittests too.
 
-[![Build status](https://ci.appveyor.com/api/projects/status/tfa6gnupi0gmd9h5)](https://ci.appveyor.com/project/RobIII/npushover)
+[![Build status](https://ci.appveyor.com/api/projects/status/tfa6gnupi0gmd9h5)](https://ci.appveyor.com/project/RobIII/npushover) <a href="https://www.nuget.org/packages/NPushover/"><img src="http://img.shields.io/nuget/v/NPushover.svg?style=flat-square" alt="NuGet version" height="18"></a> <a href="https://www.nuget.org/packages/NPushover/"><img src="http://img.shields.io/nuget/dt/NPushover.svg?style=flat-square" alt="NuGet downloads" height="18"></a>
