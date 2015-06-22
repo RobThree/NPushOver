@@ -8,6 +8,77 @@ namespace NPushover.RequestObjects
     public class Message
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="Message"/> class with default <see cref="Priority"/> and
+        /// <see cref="Sound"/>.
+        /// </summary>
+        public Message()
+            : this(Priority.Normal, null, null, false, Sounds.Pushover) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Message"/> class with default <see cref="Priority"/> and with
+        /// the specified <see cref="Sound"/>.
+        /// </summary>
+        /// <param name="sound">The <see cref="Sound"/> of the <see cref="Message"/>.</param>
+        public Message(Sounds sound)
+            : this(Priority.Normal, null, sound) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Message"/> class with default <see cref="Priority"/> and
+        /// <see cref="Sound"/> and with the specified <see cref="Body"/>.
+        /// </summary>
+        /// <param name="body">The <see cref="Message"/> <see cref="Body"/>.</param>
+        public Message(string body)
+            : this(Priority.Normal, body) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Message"/> class with default <see cref="Sound"/> and with the
+        /// specified <see cref="Priority"/> and <see cref="Body"/>.
+        /// </summary>
+        /// <param name="priority">The <see cref="Message"/> <see cref="Priority"/>.</param>
+        /// <param name="body">The <see cref="Message"/> <see cref="Body"/>.</param>
+        public Message(Priority priority, string body)
+            : this(priority, body, Sounds.Pushover) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Message"/> class with the specified <see cref="Priority"/>, 
+        /// <see cref="Body"/> and <see cref="Sound"/>.
+        /// </summary>
+        /// <param name="priority">The <see cref="Message"/> <see cref="Priority"/>.</param>
+        /// <param name="body">The <see cref="Message"/> <see cref="Body"/>.</param>
+        /// <param name="sound">The <see cref="Sound"/> of the <see cref="Message"/>.</param>
+        public Message(Priority priority, string body, Sounds sound)
+            : this(priority, body, false, sound) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Message"/> class with the specified <see cref="Priority"/>, 
+        /// <see cref="Body"/> and <see cref="Sound"/>.
+        /// </summary>
+        /// <param name="priority">The <see cref="Message"/> <see cref="Priority"/>.</param>
+        /// <param name="body">The <see cref="Message"/> <see cref="Body"/>.</param>
+        /// <param name="isHtmlBody">When the <see cref="Body"/> contains HTML, set to true. False otherwise. See <see cref="IsHtmlBody"/>.</param>
+        /// <param name="sound">The <see cref="Sound"/> of the <see cref="Message"/>.</param>
+        public Message(Priority priority, string body, bool isHtmlBody, Sounds sound)
+            : this(priority, null, body, isHtmlBody, sound) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Message"/> class with the specified <see cref="Priority"/>, 
+        /// <see cref="Title"/>, <see cref="Body"/> and <see cref="Sound"/>.
+        /// </summary>
+        /// <param name="priority">The <see cref="Message"/> <see cref="Priority"/>.</param>
+        /// <param name="title">The <see cref="Title"/> for the <see cref="Message"/>.</param>
+        /// <param name="body">The <see cref="Message"/> <see cref="Body"/>.</param>
+        /// <param name="isHtmlBody">When the <see cref="Body"/> contains HTML, set to true. False otherwise. See <see cref="IsHtmlBody"/>.</param>
+        /// <param name="sound">The <see cref="Sound"/> of the <see cref="Message"/>.</param>
+        public Message(Priority priority, string title, string body, bool isHtmlBody, Sounds sound)
+        {
+            this.Priority = priority;
+            this.Title = title;
+            this.Body = body;
+            this.IsHtmlBody = IsHtmlBody;
+            this.SetSound(sound);
+        }
+
+        /// <summary>
         /// Gets/sets the <see cref="Priority"/> of the <see cref="Message"/>.
         /// </summary>
         /// <remarks>
@@ -75,6 +146,11 @@ namespace NPushover.RequestObjects
         /// <seealso href="https://pushover.net/api#priority">Pushover API documentation</seealso>
         public RetryOptions RetryOptions { get; set; }
 
+        public static Message Create(Sounds sound)
+        {
+            return new Message(sound);
+        }
+
         /// <summary>
         /// Creates a <see cref="Message"/> with the specified <see cref="Body"/> and default <see cref="Priority"/> (Normal) and sound.
         /// </summary>
@@ -82,7 +158,7 @@ namespace NPushover.RequestObjects
         /// <returns>A <see cref="Message"/> with the specified <see cref="Body"/> and default <see cref="Priority"/> (Normal) and sound.</returns>
         public static Message Create(string body)
         {
-            return Create(Priority.Normal, body);
+            return new Message(body);
         }
 
         /// <summary>
@@ -93,7 +169,7 @@ namespace NPushover.RequestObjects
         /// <returns>A <see cref="Message"/> with the specified <see cref="Priority"/> and <see cref="Body"/> and default sound.</returns>
         public static Message Create(Priority priority, string body)
         {
-            return Create(priority, body, Sounds.Pushover);
+            return new Message(priority, body);
         }
 
         /// <summary>
@@ -105,7 +181,7 @@ namespace NPushover.RequestObjects
         /// <returns>A <see cref="Message"/> with the specified <see cref="Priority"/>, <see cref="Body"/> and <see cref="Sound"/>.</returns>
         public static Message Create(Priority priority, string body, Sounds sound)
         {
-            return Create(priority, body, false, sound);
+            return new Message(priority, body, sound);
         }
 
         /// <summary>
@@ -118,7 +194,7 @@ namespace NPushover.RequestObjects
         /// <returns>A <see cref="Message"/> with the specified <see cref="Priority"/>, <see cref="Body"/> and <see cref="Sound"/>.</returns>
         public static Message Create(Priority priority, string body, bool isHtmlBody, Sounds sound)
         {
-            return Create(priority, null, body, isHtmlBody, sound);
+            return new Message(priority, body, isHtmlBody, sound);
         }
 
         /// <summary>
@@ -136,14 +212,12 @@ namespace NPushover.RequestObjects
         /// </returns>
         public static Message Create(Priority priority, string title, string body, bool isHtmlBody, Sounds sound)
         {
-            return new Message
-            {
-                Priority = priority,
-                Title = title,
-                Body = body,
-                IsHtmlBody = isHtmlBody,
-                Sound = sound.ToString().ToLowerInvariant()
-            };
+            return new Message(priority, title, body, isHtmlBody, sound);
+        }
+
+        public void SetSound(Sounds sound)
+        {
+            this.Sound = sound.ToString().ToLowerInvariant();
         }
     }
 }
