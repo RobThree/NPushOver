@@ -14,7 +14,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{4EE890
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "NPushoverHelp", "NPushoverHelp\NPushoverHelp.shfbproj", "{677531D6-2D98-47C4-B3CC-228D34B527E8}"
+Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "NPushover.Doc", "NPushover.Doc\NPushover.Doc.shfbproj", "{677531D6-2D98-47C4-B3CC-228D34B527E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NPushover.Tests", "NPushover.Tests\NPushover.Tests.csproj", "{93F8371D-E114-403F-9AD2-116C8FAD5282}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{677531D6-2D98-47C4-B3CC-228D34B527E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{677531D6-2D98-47C4-B3CC-228D34B527E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{677531D6-2D98-47C4-B3CC-228D34B527E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93F8371D-E114-403F-9AD2-116C8FAD5282}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93F8371D-E114-403F-9AD2-116C8FAD5282}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93F8371D-E114-403F-9AD2-116C8FAD5282}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93F8371D-E114-403F-9AD2-116C8FAD5282}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -126,13 +126,33 @@ namespace NPushover
         /// <exception cref="ArgumentNullException">Thrown when applicationKey, baseUri or Encoding are null.</exception>
         /// <exception cref="InvalidKeyException">Thrown when an invalid applicationKey is specified.</exception>
         public Pushover(string applicationKey, Uri baseUri, Encoding encoding)
+            : this(applicationKey, baseUri, encoding, new ApplicationKeyValidator())
         {
-            (this.AppKeyValidator ?? new ApplicationKeyValidator()).Validate("applicationKey", applicationKey);
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="Pushover"/> with the specified applicationkey, base URI and <see cref="Encoding"/>.
+        /// </summary>
+        /// <param name="applicationKey">The application key (or token).</param>
+        /// <param name="baseUri">The base <see cref="Uri"/> to use. Note that this does not include the API version (e.g. 1).</param>
+        /// <param name="encoding">The <see cref="Encoding"/> to use for exchaning data with Pushover.</param>
+        /// <param name="applicationKeyValidator">The <see cref="IValidator&lt;T&gt;"/> to use to validate the application key.</param>
+        /// <seealso href="https://pushover.net/api">Pushover API documentation</seealso>
+        /// <exception cref="ArgumentNullException">Thrown when applicationKey, baseUri, Encoding or applicationKeyValidator are null.</exception>
+        /// <exception cref="InvalidKeyException">Thrown when an invalid applicationKey is specified.</exception>
+        public Pushover(string applicationKey, Uri baseUri, Encoding encoding, IValidator<string> applicationKeyValidator)
+        {
             if (baseUri == null)
                 throw new ArgumentNullException("baseUri");
             if (encoding == null)
                 throw new ArgumentNullException("encoding");
+            if (applicationKeyValidator == null)
+                throw new ArgumentNullException("applicationKeyValidator");
 
+            applicationKeyValidator.Validate("applicationKey", applicationKey);
+
+            this.AppKeyValidator = applicationKeyValidator;
             this.ApplicationKey = applicationKey;
             this.BaseUri = baseUri;
             this.Encoding = encoding;
