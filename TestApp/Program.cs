@@ -12,11 +12,11 @@ namespace TestApp
             var po = new Pushover("[APPLICATION-KEY-HERE]");
 
             // Quick message:
-            var msg1 = Message.Create(Priority.Normal, "Hello world!");
+            var msg1 = Message.Create("Hello world!");
             var sendtask1 = po.SendMessageAsync(msg1, "[RECIPIENT-ID-HERE]");
 
             // More comprehensive:
-            var msg2 = Message.Create(Priority.High, "The roof!", "The roof is on fire!", false, Sounds.Siren);
+            var msg2 = Message.Create(Priority.Emergency, "The roof!", "The roof is on fire!", false, Sounds.Siren);
             msg2.RetryOptions = new RetryOptions { RetryEvery = TimeSpan.FromSeconds(30), RetryPeriod = TimeSpan.FromHours(3) };
             msg2.SupplementaryUrl = new SupplementaryURL { Uri = new Uri("http://robiii.me"), Title = "Awesome dude!" };
             var sendtask2 = po.SendMessageAsync(msg2, "[RECIPIENT-ID-HERE]", "[DEVICE-ID-HERE]");
