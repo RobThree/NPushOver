@@ -121,6 +121,7 @@ namespace NPushover.RequestObjects
         /// </summary>
         /// <remarks>A list of available sounds can be retrieved with <see cref="M:NPushover.Pushover.ListSoundsAsync"/>.</remarks>
         /// <seealso cref="Sounds"/>
+        /// <seealso cref="M:NPushover.Pushover.ListSoundsAsync"/>
         /// <seealso href="https://pushover.net/api#sounds">Pushover API documentation</seealso>
         public string Sound { get; set; }
 
@@ -146,6 +147,11 @@ namespace NPushover.RequestObjects
         /// <seealso href="https://pushover.net/api#priority">Pushover API documentation</seealso>
         public RetryOptions RetryOptions { get; set; }
 
+        /// <summary>
+        /// Creates a <see cref="Message"/> with the specified <see cref="Sound"/> and default <see cref="Priority"/> (Normal).
+        /// </summary>
+        /// <param name="sound">The <see cref="Sound"/> of the <see cref="Message"/>.</param>
+        /// <returns>A <see cref="Message"/> with the specified <see cref="Sound"/>.</returns>
         public static Message Create(Sounds sound)
         {
             return new Message(sound);
@@ -215,6 +221,12 @@ namespace NPushover.RequestObjects
             return new Message(priority, title, body, isHtmlBody, sound);
         }
 
+        /// <summary>
+        /// Sets the <see cref="Sound"/> property to any of the available <see cref="Sounds"/> values.
+        /// </summary>
+        /// <param name="sound">The <see cref="Sounds"/> values to set this messages' <see cref="Sound"/> property to.</param>
+        /// <seealso cref="Sounds"/>
+        /// <seealso href="https://pushover.net/api#sounds">Pushover API documentation</seealso>
         public void SetSound(Sounds sound)
         {
             this.Sound = sound.ToString().ToLowerInvariant();
