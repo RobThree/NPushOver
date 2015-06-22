@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>NPushover</id>
+    <title>NPushover</title>
+    <version>1.0</version>
+    <authors>RobIII</authors>
+    <owners>RobIII</owners>
+    <projectUrl>https://github.com/RobThree/NPushOver</projectUrl>
+    <iconUrl>http://riii.me/npushoverlogo</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>https://github.com/RobThree/NPushOver/blob/master/LICENSE</licenseUrl>
+    <description>Pushover client.</description>
+    <summary>
+      Provides a full fledged, fully async, complete implementation of the Pushover API.
+    </summary>
+    <releaseNotes>
+      * Initial release
+    </releaseNotes>
+    <tags>pushover push notifications notification ios android desktop</tags>
+    <dependencies>
+      <dependency id="Newtonsoft" version="6.0.8" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="\bin\Release\NPushOver.dll" target="lib/net45-client" />
+    <file src="\bin\Release\NPushOver.XML" target="lib/net45-client" />
+    <file src="..\NPushover.Doc\Help\NPushover_Documentation.chm" target="content" />
+  </files>
+</package>

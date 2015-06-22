@@ -79,6 +79,7 @@
     <Compile Include="Validators\KeyValidators.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="NPushover.nuspec" />
     <None Include="packages.config" />
     <Compile Include="ResponseObjects\PushoverResponse.cs" />
   </ItemGroup>
