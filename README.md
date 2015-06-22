@@ -5,12 +5,12 @@
 
 ## Quick start:
 
-* [Register your application](https://pushover.net/apps/build), set its name (and optionally upload an icon) and get an API token in return (referred to as `ApplicationToken` in NPushover).
-* Create an instance of the `Pushover` class and provide it with the `ApplicationToken`.
+* [Register your application](https://pushover.net/apps/build), set its name (and optionally upload an icon) and get an API token in return (referred to as `ApplicationKey` in NPushover).
+* Create an instance of the `Pushover` class and provide it with the `ApplicationKey`.
 * You're all set to send your first message!
 
 ```c#
-var po = new Pushover("[APPLICATION-KEY-HERE]");
+var po = new Pushover("[APPLICATIONKEY-HERE]");
 
 // Quick message:
 var msg = Message.Create("Hello world!");
@@ -20,7 +20,7 @@ var sendtask = po.SendMessageAsync(msg, "[RECIPIENT-ID-HERE]");
 The `Message` class contains several convenience-methods to quickly create a `Message`; however you can also simply instantiate your own:
 
 ```c#
-var po = new Pushover("[APPLICATION-KEY-HERE]");
+var po = new Pushover("[APPLICATIONKEY-HERE]");
 
 // Quick message:
 var msg = new Message(Sounds.Siren)
