@@ -137,7 +137,7 @@ namespace NPushover.Tests
         public void DefaultMessageValidator_WorksCorrectly()
         {
             var target = new DefaultMessageValidator();
-            var message = Message.Create(Priority.Normal, "Minimal message");
+            var message = Message.Create("Minimal message");
             target.Validate("test", message);
         }
 

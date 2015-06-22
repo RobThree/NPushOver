@@ -82,7 +82,7 @@ namespace NPushover.RequestObjects
         /// <returns>A <see cref="Message"/> with the specified <see cref="Body"/> and default <see cref="Priority"/> (Normal) and sound.</returns>
         public static Message Create(string body)
         {
-            return Create(Priority.Normal, body, Sounds.Pushover);
+            return Create(Priority.Normal, body);
         }
 
         /// <summary>
