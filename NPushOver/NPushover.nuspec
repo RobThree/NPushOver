@@ -3,7 +3,7 @@
   <metadata>
     <id>NPushover</id>
     <title>NPushover</title>
-    <version>1.0</version>
+    <version>1.1</version>
     <authors>RobIII</authors>
     <owners>RobIII</owners>
     <projectUrl>https://github.com/RobThree/NPushOver</projectUrl>
@@ -15,11 +15,12 @@
       Provides a full fledged, fully async, complete implementation of the Pushover API.
     </summary>
     <releaseNotes>
-      * Initial release
+      * Uses .ConfigureAwait(false) internally where applicable (which is considered a 'best practice' for libraries).
+      * Updated to Newtonsoft.Json 7.0.1
     </releaseNotes>
     <tags>pushover push notifications notification ios android desktop</tags>
     <dependencies>
-      <dependency id="Newtonsoft.Json" version="6.0.8" />
+      <dependency id="Newtonsoft.Json" version="7.0.1" />
     </dependencies>
   </metadata>
   <files>

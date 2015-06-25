@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Topics>
-  <Topic id="099b6407-c379-44eb-b30b-3a55e9efe838" visible="True" isDefault="true" isSelected="true" title="Welcome to NPushover">
+  <Topic id="099b6407-c379-44eb-b30b-3a55e9efe838" visible="True" isDefault="true" title="Welcome to NPushover">
     <HelpKeywords>
       <HelpKeyword index="K" term="Welcome" />
     </HelpKeywords>
@@ -9,9 +9,14 @@
     <HelpKeywords>
       <HelpKeyword index="K" term="version, history" />
     </HelpKeywords>
-    <Topic id="02491d4f-72d6-441e-842b-4e976cb8d36e" visible="True" title="Version 1.0">
+    <Topic id="02491d4f-72d6-441e-842b-4e976cb8d36e" visible="True" isSelected="true" title="Version 1.0">
       <HelpKeywords>
         <HelpKeyword index="K" term="version, 1.0" />
+      </HelpKeywords>
+    </Topic>
+    <Topic id="6f9fa058-b0e7-4ca4-98ec-4b91a8d1135b" visible="True" title="Version 1.1">
+      <HelpKeywords>
+        <HelpKeyword index="K" term="version, 1.1" />
       </HelpKeywords>
     </Topic>
   </Topic>

@@ -171,7 +171,7 @@ namespace NPushover
         /// <exception cref="InvalidKeyException">Thrown when an invalid user/group is specified.</exception>
         public async Task<PushoverUserResponse> SendMessageAsync(Message message, string userOrGroup)
         {
-            return await this.SendMessageAsync(message, userOrGroup, (string[])null);
+            return await this.SendMessageAsync(message, userOrGroup, (string[])null).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace NPushover
         /// <exception cref="InvalidKeyException">Thrown when an invalid user/group is specified.</exception>
         public async Task<PushoverUserResponse> SendMessageAsync(Message message, string userOrGroup, string deviceName)
         {
-            return await this.SendMessageAsync(message, userOrGroup, new[] { deviceName });
+            return await this.SendMessageAsync(message, userOrGroup, new[] { deviceName }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -238,7 +238,7 @@ namespace NPushover
             if (message.Timestamp != null)
                 parameters.Add("timestamp", (int)(TimeZoneInfo.ConvertTimeToUtc(message.Timestamp.Value).Subtract(EPOCH).TotalSeconds));
 
-            return await this.Post<PushoverUserResponse>(GetV1APIUriFromBase("messages.json"), parameters);
+            return await this.Post<PushoverUserResponse>(GetV1APIUriFromBase("messages.json"), parameters).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -248,7 +248,7 @@ namespace NPushover
         /// <returns>Returns a <see cref="SoundsResponse"/>.</returns>
         public async Task<SoundsResponse> ListSoundsAsync()
         {
-            return await this.Get<SoundsResponse>(GetV1APIUriFromBase("sounds.json?token={0}", this.ApplicationKey));
+            return await this.Get<SoundsResponse>(GetV1APIUriFromBase("sounds.json?token={0}", this.ApplicationKey)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -264,7 +264,7 @@ namespace NPushover
         public async Task<ReceiptResponse> GetReceiptAsync(string receipt)
         {
             (this.ReceiptValidator ?? new ReceiptValidator()).Validate("receipt", receipt);
-            return await this.Get<ReceiptResponse>(GetV1APIUriFromBase("receipts/{0}.json?token={1}", receipt, this.ApplicationKey));
+            return await this.Get<ReceiptResponse>(GetV1APIUriFromBase("receipts/{0}.json?token={1}", receipt, this.ApplicationKey)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -281,7 +281,7 @@ namespace NPushover
             var parameters = new NameValueCollection { 
                 { "token", this.ApplicationKey }
             };
-            return await this.Post<PushoverUserResponse>(GetV1APIUriFromBase("receipts/{0}/cancel.json", receipt), parameters);
+            return await this.Post<PushoverUserResponse>(GetV1APIUriFromBase("receipts/{0}/cancel.json", receipt), parameters).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -298,7 +298,7 @@ namespace NPushover
         /// <exception cref="InvalidKeyException">Thrown when user/group id is invalid.</exception>
         public async Task<ValidateUserOrGroupResponse> ValidateUserOrGroupAsync(string userOrGroup)
         {
-            return await ValidateUserOrGroupAsync(userOrGroup, null);
+            return await ValidateUserOrGroupAsync(userOrGroup, null).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -324,7 +324,7 @@ namespace NPushover
                 { "token", this.ApplicationKey }, 
                 { "user", userOrGroup }
             };
-            return await this.Post<ValidateUserOrGroupResponse>(GetV1APIUriFromBase("users/validate.json"), parameters);
+            return await this.Post<ValidateUserOrGroupResponse>(GetV1APIUriFromBase("users/validate.json"), parameters).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -339,7 +339,7 @@ namespace NPushover
         /// <exception cref="InvalidKeyException">Thrown when user or devicename are invalid.</exception>
         public async Task<MigrateSubscriptionResponse> MigrateSubscriptionAsync(string subscription, string user)
         {
-            return await MigrateSubscriptionAsync(subscription, user, null);
+            return await MigrateSubscriptionAsync(subscription, user, null).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -355,7 +355,7 @@ namespace NPushover
         /// <exception cref="InvalidKeyException">Thrown when user or devicename are invalid.</exception>
         public async Task<MigrateSubscriptionResponse> MigrateSubscriptionAsync(string subscription, string user, string device)
         {
-            return await MigrateSubscriptionAsync(subscription, user, null, null);
+            return await MigrateSubscriptionAsync(subscription, user, null, null).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -386,7 +386,7 @@ namespace NPushover
             parameters.AddConditional("device_name", device);
             parameters.AddConditional("sound", sound);
 
-            return await this.Post<MigrateSubscriptionResponse>(GetV1APIUriFromBase("subscriptions/migrate.json"), parameters);
+            return await this.Post<MigrateSubscriptionResponse>(GetV1APIUriFromBase("subscriptions/migrate.json"), parameters).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -400,7 +400,7 @@ namespace NPushover
         /// <exception cref="ArgumentOutOfRangeException">Invalid <see cref="OS"/> specified.</exception>
         public async Task<AssignLicenseResponse> AssignLicenseAsync(string user, string email)
         {
-            return await AssignLicenseAsync(user, email, OS.Any);
+            return await AssignLicenseAsync(user, email, OS.Any).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -433,7 +433,7 @@ namespace NPushover
             parameters.AddConditional("email", email);
             parameters.AddConditional("os", os);
 
-            return await this.Post<AssignLicenseResponse>(GetV1APIUriFromBase("licenses/assign.json"), parameters);
+            return await this.Post<AssignLicenseResponse>(GetV1APIUriFromBase("licenses/assign.json"), parameters).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -456,7 +456,7 @@ namespace NPushover
                 { "password", password }, 
             };
 
-            return await this.Post<LoginResponse>(GetV1APIUriFromBase("users/login.json"), parameters);
+            return await this.Post<LoginResponse>(GetV1APIUriFromBase("users/login.json"), parameters).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -485,7 +485,7 @@ namespace NPushover
             //However, the JSON returned is {"errors":{"name":["has already been taken"]},"status":0,"request":"b3e85163d0bd8fc84565839ffc33bb42"}
             //Where "errors" normally is an array, it is now an object... this is not (very) consistent with the rest of the responses
             //The call, currently, throws a BadRequestException, as it should, however the errorresponse fails to parse because of this inconsistency...
-            return await this.Post<RegisterDeviceResponse>(GetV1APIUriFromBase("devices.json"), parameters);
+            return await this.Post<RegisterDeviceResponse>(GetV1APIUriFromBase("devices.json"), parameters).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -503,7 +503,7 @@ namespace NPushover
             if (string.IsNullOrEmpty(deviceId))
                 throw new ArgumentNullException("deviceId");
 
-            return await this.Get<ListMessagesResponse>(GetV1APIUriFromBase("messages.json?secret={0}&device_id={1}", secret, deviceId));
+            return await this.Get<ListMessagesResponse>(GetV1APIUriFromBase("messages.json?secret={0}&device_id={1}", secret, deviceId)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -530,7 +530,7 @@ namespace NPushover
             };
             parameters.Add("message", upToAndIncludingMessageId);
 
-            return await this.Post<PushoverUserResponse>(GetV1APIUriFromBase("devices/{0}/update_highest_message.json", deviceId), parameters);
+            return await this.Post<PushoverUserResponse>(GetV1APIUriFromBase("devices/{0}/update_highest_message.json", deviceId), parameters).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -553,7 +553,7 @@ namespace NPushover
             var parameters = new NameValueCollection { 
                 { "secret", secret }
             };
-            return await this.Post<PushoverUserResponse>(GetV1APIUriFromBase("receipts/{0}/acknowledge.json", receipt), parameters);
+            return await this.Post<PushoverUserResponse>(GetV1APIUriFromBase("receipts/{0}/acknowledge.json", receipt), parameters).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -567,7 +567,7 @@ namespace NPushover
         {
             if (string.IsNullOrEmpty(iconName))
                 throw new ArgumentNullException("iconName");
-            return await this.DownloadFileAsync(GetIconUriFromBase("{0}.png", iconName));
+            return await this.DownloadFileAsync(GetIconUriFromBase("{0}.png", iconName)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -579,7 +579,7 @@ namespace NPushover
         /// <exception cref="ArgumentNullException">Thrown when soundname is null.</exception>
         public async Task<Stream> DownloadSoundAsync(string soundName)
         {
-            return await DownloadSoundAsync(soundName, AudioFormat.Mp3);
+            return await DownloadSoundAsync(soundName, AudioFormat.Mp3).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -598,7 +598,7 @@ namespace NPushover
             if (!Enum.IsDefined(typeof(AudioFormat), audioFormat))
                 throw new ArgumentOutOfRangeException("audioFormat");
 
-            return await this.DownloadFileAsync(GetSoundsUriFromBase("{0}.{1}", soundName, audioFormat.ToString().ToLowerInvariant()));
+            return await this.DownloadFileAsync(GetSoundsUriFromBase("{0}.{1}", soundName, audioFormat.ToString().ToLowerInvariant())).ConfigureAwait(false);
         }
         #endregion
 
@@ -611,7 +611,7 @@ namespace NPushover
         private async Task<Stream> DownloadFileAsync(Uri uri)
         {
             using (var wc = this.GetWebClient())
-                return await wc.OpenReadTaskAsync(uri);
+                return await wc.OpenReadTaskAsync(uri).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -683,9 +683,9 @@ namespace NPushover
             {
                 return await ExecuteWebRequest<T>(async () =>
                 {
-                    var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(uri, parameters));
-                    return await ParseResponse<T>(json, wc.ResponseHeaders);
-                });
+                    var json = this.Encoding.GetString(await wc.UploadValuesTaskAsync(uri, parameters).ConfigureAwait(false));
+                    return await ParseResponse<T>(json, wc.ResponseHeaders).ConfigureAwait(false);
+                }).ConfigureAwait(false);
             }
         }
 
@@ -702,9 +702,9 @@ namespace NPushover
             {
                 return await ExecuteWebRequest<T>(async () =>
                 {
-                    var json = await wc.DownloadStringTaskAsync(uri);
-                    return await ParseResponse<T>(json, wc.ResponseHeaders);
-                });
+                    var json = await wc.DownloadStringTaskAsync(uri).ConfigureAwait(false);
+                    return await ParseResponse<T>(json, wc.ResponseHeaders).ConfigureAwait(false);
+                }).ConfigureAwait(false);
             }
         }
 
@@ -717,7 +717,7 @@ namespace NPushover
         {
             try
             {
-                return await func.Invoke();
+                return await func.Invoke().ConfigureAwait(false);
             }
             catch (WebException wex)
             {
@@ -796,7 +796,7 @@ namespace NPushover
             T result;
             try
             {
-                result = await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(json));
+                result = await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(json)).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

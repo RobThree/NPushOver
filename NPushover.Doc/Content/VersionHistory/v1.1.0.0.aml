@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="6f9fa058-b0e7-4ca4-98ec-4b91a8d1135b" revisionNumber="1">
+  <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <introduction>
+      <para>
+        Version 1.1 was released on 2015-06-26.
+      </para>
+    </introduction>
+
+    <section>
+      <title>Changes in This Release</title>
+      <content>
+
+        <list class="bullet">
+          <listItem>
+            <para>Added .ConfigureAwait(false) where applicable</para>
+            <para>Updated to Newtonsoft.Json 7.0.1</para>
+          </listItem>
+
+        </list>
+
+      </content>
+    </section>
+
+    <relatedTopics>
+      <link xlink:href="7fa94a6e-a64a-4dd7-83a3-e7a3f06bc2a3" />
+    </relatedTopics>
+
+  </developerConceptualDocument>
+</topic>
