@@ -14,9 +14,10 @@
         <list class="bullet">
           <listItem>
             <para>Added .ConfigureAwait(false) where applicable</para>
+          </listItem>
+          <listItem>
             <para>Updated to Newtonsoft.Json 7.0.1</para>
           </listItem>
-
         </list>
 
       </content>
