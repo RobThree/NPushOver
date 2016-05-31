@@ -666,7 +666,7 @@ namespace NPushover
         /// <returns>Returns the escaped <see cref="Uri"/>.</returns>
         private string FormatUri(string uri, params object[] args)
         {
-            return string.Format(uri, args.Select(a => Uri.EscapeDataString(a.ToString())));
+            return string.Format(uri, args.Select(a => Uri.EscapeDataString(a.ToString())).ToArray());
         }
 
         /// <summary>

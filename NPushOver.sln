@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NPushover", "NPushover\NPushover.csproj", "{ED45AAA0-87AA-48D3-BCE9-6EACE9E3F19E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.csproj", "{D4FBF260-38CA-40B7-AFD3-1A1D5E89DD7E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{4EE890C4-1E84-451F-8AA0-812FEA55F6EE}"
 	ProjectSection(SolutionItems) = preProject
@@ -18,6 +16,8 @@ Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "NPushover.Doc", "NPushover.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NPushover.Tests", "NPushover.Tests\NPushover.Tests.csproj", "{93F8371D-E114-403F-9AD2-116C8FAD5282}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.csproj", "{E4A4F8BF-3831-48E5-839F-6FF15760D603}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,10 +28,6 @@ Global
 		{ED45AAA0-87AA-48D3-BCE9-6EACE9E3F19E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED45AAA0-87AA-48D3-BCE9-6EACE9E3F19E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED45AAA0-87AA-48D3-BCE9-6EACE9E3F19E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D4FBF260-38CA-40B7-AFD3-1A1D5E89DD7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D4FBF260-38CA-40B7-AFD3-1A1D5E89DD7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D4FBF260-38CA-40B7-AFD3-1A1D5E89DD7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D4FBF260-38CA-40B7-AFD3-1A1D5E89DD7E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{677531D6-2D98-47C4-B3CC-228D34B527E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{677531D6-2D98-47C4-B3CC-228D34B527E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{677531D6-2D98-47C4-B3CC-228D34B527E8}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -39,6 +35,10 @@ Global
 		{93F8371D-E114-403F-9AD2-116C8FAD5282}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93F8371D-E114-403F-9AD2-116C8FAD5282}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93F8371D-E114-403F-9AD2-116C8FAD5282}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4A4F8BF-3831-48E5-839F-6FF15760D603}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4A4F8BF-3831-48E5-839F-6FF15760D603}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4A4F8BF-3831-48E5-839F-6FF15760D603}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4A4F8BF-3831-48E5-839F-6FF15760D603}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
