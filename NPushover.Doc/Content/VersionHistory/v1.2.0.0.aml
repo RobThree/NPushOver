@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="f176f32f-0c70-4a46-9881-f346be3c4103" revisionNumber="1">
+  <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <introduction>
+      <para>
+        Version 1.2 was released on 2016-05-31.
+      </para>
+    </introduction>
+
+    <section>
+      <title>Changes in This Release</title>
+      <content>
+
+        <list class="bullet">
+          <listItem>
+            <para>Fixed URL building; some methods returned a 404</para>
+          </listItem>
+          <listItem>
+            <para>Updated to Newtonsoft.Json 8.0.3</para>
+          </listItem>
+        </list>
+
+      </content>
+    </section>
+
+    <relatedTopics>
+      <link xlink:href="7fa94a6e-a64a-4dd7-83a3-e7a3f06bc2a3" />
+    </relatedTopics>
+
+  </developerConceptualDocument>
+</topic>

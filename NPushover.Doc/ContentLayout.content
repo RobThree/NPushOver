@@ -9,7 +9,7 @@
     <HelpKeywords>
       <HelpKeyword index="K" term="version, history" />
     </HelpKeywords>
-    <Topic id="02491d4f-72d6-441e-842b-4e976cb8d36e" visible="True" isSelected="true" title="Version 1.0">
+    <Topic id="02491d4f-72d6-441e-842b-4e976cb8d36e" visible="True" title="Version 1.0">
       <HelpKeywords>
         <HelpKeyword index="K" term="version, 1.0" />
       </HelpKeywords>
@@ -17,6 +17,11 @@
     <Topic id="6f9fa058-b0e7-4ca4-98ec-4b91a8d1135b" visible="True" title="Version 1.1">
       <HelpKeywords>
         <HelpKeyword index="K" term="version, 1.1" />
+      </HelpKeywords>
+    </Topic>
+    <Topic id="f176f32f-0c70-4a46-9881-f346be3c4103" visible="True" isSelected="true" title="Version 1.2">
+      <HelpKeywords>
+        <HelpKeyword index="K" term="version, 1.2" />
       </HelpKeywords>
     </Topic>
   </Topic>
