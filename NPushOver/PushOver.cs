@@ -213,8 +213,8 @@ namespace NPushover
                 }
             }
 
-            var parameters = new NameValueCollection { 
-                { "token", this.ApplicationKey }, 
+            var parameters = new NameValueCollection {
+                { "token", this.ApplicationKey },
                 { "user", userOrGroup },
                 { "message", message.Body }
             };
@@ -278,7 +278,7 @@ namespace NPushover
         public async Task<PushoverUserResponse> CancelReceiptAsync(string receipt)
         {
             (this.ReceiptValidator ?? new ReceiptValidator()).Validate("receipt", receipt);
-            var parameters = new NameValueCollection { 
+            var parameters = new NameValueCollection {
                 { "token", this.ApplicationKey }
             };
             return await this.Post<PushoverUserResponse>(GetV1APIUriFromBase("receipts/{0}/cancel.json", receipt), parameters).ConfigureAwait(false);
@@ -320,8 +320,8 @@ namespace NPushover
             if (deviceName != null)
                 (this.DeviceNameValidator ?? new DeviceNameValidator()).Validate("device", deviceName);
 
-            var parameters = new NameValueCollection { 
-                { "token", this.ApplicationKey }, 
+            var parameters = new NameValueCollection {
+                { "token", this.ApplicationKey },
                 { "user", userOrGroup }
             };
             return await this.Post<ValidateUserOrGroupResponse>(GetV1APIUriFromBase("users/validate.json"), parameters).ConfigureAwait(false);
@@ -378,8 +378,8 @@ namespace NPushover
             if (device != null)
                 (this.DeviceNameValidator ?? new DeviceNameValidator()).Validate("device", device);
 
-            var parameters = new NameValueCollection { 
-                { "token", this.ApplicationKey }, 
+            var parameters = new NameValueCollection {
+                { "token", this.ApplicationKey },
                 { "subscription", subscription },
                 { "user", user },
             };
@@ -426,8 +426,8 @@ namespace NPushover
             if (!Enum.IsDefined(typeof(OS), os))
                 throw new ArgumentOutOfRangeException("os");
 
-            var parameters = new NameValueCollection { 
-                { "token", this.ApplicationKey }, 
+            var parameters = new NameValueCollection {
+                { "token", this.ApplicationKey },
             };
             parameters.AddConditional("user", user);
             parameters.AddConditional("email", email);
@@ -451,9 +451,9 @@ namespace NPushover
             if (string.IsNullOrEmpty(password))
                 throw new ArgumentNullException("password");
 
-            var parameters = new NameValueCollection { 
-                { "email", email }, 
-                { "password", password }, 
+            var parameters = new NameValueCollection {
+                { "email", email },
+                { "password", password },
             };
 
             return await this.Post<LoginResponse>(GetV1APIUriFromBase("users/login.json"), parameters).ConfigureAwait(false);
@@ -474,9 +474,9 @@ namespace NPushover
                 throw new ArgumentNullException("secret");
             (this.DeviceNameValidator ?? new DeviceNameValidator()).Validate("deviceName", deviceName);
 
-            var parameters = new NameValueCollection { 
-                { "secret", secret }, 
-                { "name", deviceName }, 
+            var parameters = new NameValueCollection {
+                { "secret", secret },
+                { "name", deviceName },
                 { "os", "O" }, //This is, currently, the only supported value ("Open Client")
             };
 
@@ -525,8 +525,8 @@ namespace NPushover
             if (upToAndIncludingMessageId < 0)
                 throw new ArgumentOutOfRangeException("upToAndIncludingMessageId");
 
-            var parameters = new NameValueCollection { 
-                { "secret", secret }, 
+            var parameters = new NameValueCollection {
+                { "secret", secret },
             };
             parameters.Add("message", upToAndIncludingMessageId);
 
@@ -550,7 +550,7 @@ namespace NPushover
                 throw new ArgumentNullException("secret");
             (this.ReceiptValidator ?? new ReceiptValidator()).Validate("receipt", receipt);
 
-            var parameters = new NameValueCollection { 
+            var parameters = new NameValueCollection {
                 { "secret", secret }
             };
             return await this.Post<PushoverUserResponse>(GetV1APIUriFromBase("receipts/{0}/acknowledge.json", receipt), parameters).ConfigureAwait(false);
@@ -726,12 +726,19 @@ namespace NPushover
                 {
                     //Try parse any json response... IF any
                     var errorresponse = ParseErrorResponse(response);
-                    switch ((int)response.StatusCode)
+                    if (errorresponse != null)
                     {
-                        case 400:   //Bad request
-                            throw new BadRequestException(errorresponse, wex);
-                        case 429:   //Rate limited
-                            throw new RateLimitExceededException(errorresponse);
+                        switch ((int)response.StatusCode)
+                        {
+                            case 400:   //Bad request
+                                throw new BadRequestException(errorresponse, wex);
+                            case 429:   //Rate limited
+                                throw new RateLimitExceededException(errorresponse);
+                        }
+                    }
+                    else
+                    {
+                        throw new ResponseException(string.Format("Unable to parse error response. Status was: {0} {1}", response.StatusCode, response.StatusDescription));
                     }
                 }
                 throw;

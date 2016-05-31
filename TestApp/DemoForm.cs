@@ -1,6 +1,8 @@
 ﻿using NPushover;
-using NPushover.RequestObjects;    
+using NPushover.RequestObjects;
 using System;
+using System.Configuration;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace TestApp
@@ -13,41 +15,64 @@ namespace TestApp
         {
             InitializeComponent();
 
+            cmbPriorities.DataSource = ((Priority[])Enum.GetValues(typeof(Priority))).OrderBy(v => v).ToArray();
+            cmbSounds.DataSource = ((Sounds[])Enum.GetValues(typeof(Sounds))).OrderBy(v => v).ToArray();
+
+            // See App.Config for values
+            txtAppKey.Text = ConfigurationManager.AppSettings["applicationkey"];
+            txtUserKey.Text = ConfigurationManager.AppSettings["userkey"];
         }
 
         private async void cmdSendMessage_Click(object sender, EventArgs e)
         {
             var pushover = new Pushover(txtAppKey.Text);
             var msg = NPushover.RequestObjects.Message.Create(txtMessage.Text); // We need to use the fully qualified 
-                                                                                // namespace since Message conflicts 
-                                                                                // with System.Windows.Forms.Message
-            
+                                                                                // namespace in a Form since Message 
+                                                                                // conflicts  with 
+                                                                                // System.Windows.Forms.Message
+
             await pushover.SendMessageAsync(msg, txtUserKey.Text);
         }
 
         private async void cmdSendEmergency_Click(object sender, EventArgs e)
         {
-            var pushover = new Pushover(txtAppKey.Text);
-
+            // Create message
             var msg = NPushover.RequestObjects.Message.Create(
-                Priority.Emergency, 
-                txtTitle.Text, 
-                txtEmergency.Text, 
-                false, 
-                Sounds.Siren
+                (Priority)cmbPriorities.SelectedItem,
+                txtTitle.Text,
+                txtMessage.Text,
+                chkIsHtml.Checked,
+                (Sounds)cmbSounds.SelectedItem
             );
-            msg.RetryOptions = new RetryOptions {
-                RetryEvery = TimeSpan.FromSeconds(30),
-                RetryPeriod = TimeSpan.FromHours(3)
-            };
-            msg.SupplementaryUrl = new SupplementaryURL {
-                Uri = new Uri("http://robiii.me"),
-                Title = "Awesome dude!"
-            };
 
+            // Emergency messages have retryoptions
+            if (this.IsEmergencyMessage())
+            {
+                msg.RetryOptions = new RetryOptions
+                {
+                    RetryEvery = TimeSpan.FromSeconds((int)txtRetryEvery.Value),
+                    RetryPeriod = TimeSpan.FromMinutes((int)txtRetryPeriod.Value),
+                    //CallBackUrl = new Uri("http://example.org/foo/bar")
+                };
+            }
+
+            // Also, supplementary URL's can be specified
+            if (!string.IsNullOrEmpty(txtSupplementaryURL.Text))
+            {
+                msg.SupplementaryUrl = new SupplementaryURL
+                {
+                    Uri = new Uri(txtSupplementaryURL.Text),
+                    Title = txtSupplementaryURLTitle.Text
+                };
+            }
+
+            // Send the message
+            var pushover = new Pushover(txtAppKey.Text);
             var result = await pushover.SendMessageAsync(msg, txtUserKey.Text);
-            btnCancel.Enabled = true;
-            _receiptid = result.Receipt;    //Store receipt ID
+
+            //Store receipt ID (if any)
+            _receiptid = result.Receipt;
+            btnCancel.Enabled = !string.IsNullOrEmpty(_receiptid);
         }
 
         private async void btnCancel_Click(object sender, EventArgs e)
@@ -56,13 +81,15 @@ namespace TestApp
             var result = await pushover.CancelReceiptAsync(_receiptid);
             btnCancel.Enabled = !result.IsOk;
         }
+
+        private void cmbPriorities_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            pnlRetry.Enabled = this.IsEmergencyMessage();
+        }
+
+        private bool IsEmergencyMessage()
+        {
+            return (Priority)cmbPriorities.SelectedItem == Priority.Emergency;
+        }
     }
 }
-
-
-//// Other examples:
-//pushover.ValidateUserOrGroupAsync("[USER-ID-HERE]"),
-//pushover.CancelReceiptAsync("[RECEIPT-ID-HERE]"),
-//pushover.ListSoundsAsync(),
-//pushover.LoginAsync("[EMAIL-HERE]", "[PASSWORD-HERE]"),
-//pushover.ListMessagesAsync("[SECRET-HERE]", "[DEVICE-ID-HERE]")

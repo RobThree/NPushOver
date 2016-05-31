@@ -3,7 +3,7 @@
   <metadata>
     <id>NPushover</id>
     <title>NPushover</title>
-    <version>1.2</version>
+    <version>1.2.1</version>
     <authors>RobIII</authors>
     <owners>RobIII</owners>
     <projectUrl>https://github.com/RobThree/NPushOver</projectUrl>
@@ -15,8 +15,7 @@
       Provides a full fledged, fully async, complete implementation of the Pushover API.
     </summary>
     <releaseNotes>
-      * Fixed URL building (some requests returned 404)
-      * Updated to Newtonsoft.Json 8.0.3
+      * Exception handling improved (possible NullReference solved)
     </releaseNotes>
     <tags>pushover push notifications notification ios android desktop</tags>
     <dependencies>
